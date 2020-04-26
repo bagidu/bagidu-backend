@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { User } from './interfaces/user.interface';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { ObjectID } from 'mongodb'
 
 @Injectable()
 export class UserService {
@@ -14,6 +15,21 @@ export class UserService {
     }
 
     async all(): Promise<User[]> {
-        return this.userModel.find()
+        const result = await this.userModel.find().select('-password')
+        return result
+    }
+
+    async findById(id: string): Promise<User> {
+        const user = await this.userModel.findOne({
+            $or: [
+                { _id: isValidObjectId(id) ? new ObjectID(id) : new ObjectID() },
+                { username: id }
+            ]
+        }).select('-password')
+        return user
+    }
+
+    async findBy(query: any): Promise<User> {
+        return this.userModel.findOne(query)
     }
 }

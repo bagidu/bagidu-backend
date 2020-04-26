@@ -1,12 +1,11 @@
 import { Document } from "mongoose";
 
-export interface UserBase {
+
+export interface User extends Document {
+    id: string,
     name: string,
     email: string,
     username: string,
     createdAt: Date,
     password: string
-}
-
-export interface User extends Document, UserBase {
 }
