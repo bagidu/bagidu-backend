@@ -4,32 +4,34 @@ import { Model, isValidObjectId } from 'mongoose';
 import { User } from './interfaces/user.interface';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { ObjectID } from 'mongodb'
-
+import { User as UserEntity } from './entities/user.entity'
+import { plainToClass } from 'class-transformer';
 @Injectable()
 export class UserService {
     constructor(@InjectModel('User') private userModel: Model<User>) { }
 
-    async create(data: CreateUserDto): Promise<User> {
+    async create(data: CreateUserDto): Promise<UserEntity> {
         const user = new this.userModel(data)
-        return user.save()
+        return plainToClass(UserEntity, await user.save())
     }
 
-    async all(): Promise<User[]> {
-        const result = await this.userModel.find().select('-password')
-        return result
+    async all(): Promise<UserEntity[]> {
+        const result = await this.userModel.find().lean()
+        return plainToClass(UserEntity, result)
     }
 
-    async findById(id: string): Promise<User> {
+    async findById(id: string): Promise<UserEntity> {
         const user = await this.userModel.findOne({
             $or: [
                 { _id: isValidObjectId(id) ? new ObjectID(id) : new ObjectID() },
                 { username: id }
             ]
-        }).select('-password')
-        return user
+        }).lean()
+        return plainToClass(UserEntity, user)
     }
 
-    async findBy(query: any): Promise<User> {
-        return this.userModel.findOne(query)
+    async findBy(query: any): Promise<UserEntity> {
+        const user = await this.userModel.findOne(query).lean()
+        return plainToClass(UserEntity, user)
     }
 }

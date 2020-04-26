@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
@@ -32,10 +33,7 @@ export class UserController {
             throw new BadRequestException('Username already in use')
         }
 
-        const user = await this.userService.create(createUserDto)
-        const resp = user.toObject()
-        delete resp.password
-        return resp
+        return this.userService.create(createUserDto)
     }
 
 }
