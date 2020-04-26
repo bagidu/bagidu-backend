@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { MongoError } from 'mongodb'
 
 @Controller('user')
 export class UserController {
