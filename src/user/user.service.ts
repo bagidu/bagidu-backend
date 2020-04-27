@@ -12,7 +12,8 @@ export class UserService {
 
     async create(data: CreateUserDto): Promise<UserEntity> {
         const user = new this.userModel(data)
-        return plainToClass(UserEntity, await user.save())
+        const result = await (await user.save()).toObject()
+        return plainToClass(UserEntity, result)
     }
 
     async all(): Promise<UserEntity[]> {

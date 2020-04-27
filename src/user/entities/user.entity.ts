@@ -13,11 +13,10 @@ export class User {
     username: string;
     @Expose()
     createdAt: Date;
-    @Exclude()
+    @Exclude({ toPlainOnly: true })
     password: string
 
-    @Expose()
-    get userEmail(): string {
-        return this.name + " " + this.email
+    get getPassword(): string {
+        return this.password
     }
 }
