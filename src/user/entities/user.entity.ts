@@ -1,9 +1,16 @@
-import { Exclude, Expose, Transform } from 'class-transformer'
+import { Exclude, Expose, } from 'class-transformer'
 export class User {
 
-    @Expose({ name: '_id' })
-    @Transform(id => id.toString())
-    id: string;
+    // @Expose({ name: '_id', toClassOnly: true, toPlainOnly: false })
+    // @Transform(id => id.toString())
+    // id: string;
+    @Exclude({ toPlainOnly: true })
+    _id: string;
+
+    @Expose()
+    get id() {
+        return this._id.toString()
+    }
 
     @Expose()
     name: string;
@@ -16,7 +23,7 @@ export class User {
     @Exclude({ toPlainOnly: true })
     password: string
 
-    get getPassword(): string {
-        return this.password
-    }
+    // get getPassword(): string {
+    //     return this.password
+    // }
 }
