@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose'
+import { MongooseModule, InjectConnection } from '@nestjs/mongoose'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { Connection } from 'mongoose';
 
 @Module({
   imports: [
@@ -25,4 +26,9 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {
+  connection: Connection
+  constructor(@InjectConnection() connection: Connection) {
+    this.connection = connection
+  }
+}
