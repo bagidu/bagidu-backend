@@ -34,8 +34,7 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 
-  it('validate user', async () => {
-    const password = await bcrypt.hash('secret', 10)
+  describe('validate user', () => {
     const user = {
       id: 'userid',
       _id: 'userid',
@@ -43,15 +42,28 @@ describe('AuthService', () => {
       email: 'user@email.com',
       username: 'username',
       createdAt: new Date(),
-      password
+      password: '$2b$10$48CFoRAeC/yhu5DvRbB2cu.OHsMo1zMxhEXZ.7Jc5AhI0LEZhOakK'
     }
-    jest.spyOn(userServie, 'findBy').mockReturnValue(Promise.resolve(user))
-    expect(service.validateUser('username', 'secret')).resolves
-      .toEqual(user)
-      .catch(err => expect(err).toBeNull())
 
-    expect(service.validateUser('username', 'wrongsecret')).resolves
-      .toBeNull()
-      .catch(err => expect(err).toBeNull())
+    it('resolve user', () => {
+      jest.spyOn(userServie, 'findBy').mockReturnValueOnce(Promise.resolve(user))
+
+      return expect(service.validateUser('username', 'secret')).resolves
+        .toEqual(user)
+    })
+
+    it('resolve null on wrong password', () => {
+      jest.spyOn(userServie, 'findBy').mockReturnValueOnce(Promise.resolve(user))
+
+      return expect(service.validateUser('username', 'wrongscret')).resolves
+        .toBeNull()
+    })
+
+    it('resolve null on wrong user', () => {
+      jest.spyOn(userServie, 'findBy').mockReturnValueOnce(Promise.resolve(null))
+
+      return expect(service.validateUser('username', 'secret')).resolves
+        .toBeNull()
+    })
   })
 });
