@@ -18,7 +18,7 @@ export class User {
     email: string;
     @Expose()
     username: string;
-    @Expose()
+    @Expose({ name: 'created_at', toPlainOnly: true })
     createdAt: Date;
     @Exclude({ toPlainOnly: true })
     password: string
