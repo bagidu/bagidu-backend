@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { Connection } from 'mongoose';
+import { DonationModule } from './donation/donation.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { Connection } from 'mongoose';
       inject: [ConfigService],
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    DonationModule
   ],
   controllers: [AppController],
   providers: [AppService],

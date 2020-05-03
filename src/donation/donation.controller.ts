@@ -1,0 +1,31 @@
+import { Controller, Get, UseGuards, Req, Body, Post, Param, NotFoundException, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { DonationService } from './donation.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { MakeDonationDto } from './dtos/make-donation.dto';
+import { UserService } from 'src/user/user.service';
+
+@Controller('donation')
+@UseInterceptors(ClassSerializerInterceptor)
+export class DonationController {
+    constructor(
+        private readonly donationService: DonationService,
+        private readonly userService: UserService
+    ) { }
+
+    @UseGuards(JwtAuthGuard)
+    @Get()
+    async all(@Req() { user }: any) {
+        return this.donationService.allByUser(user.id)
+    }
+
+    @Post(':username')
+    async create(@Body() data: MakeDonationDto, @Param('username') username: string) {
+        const user = await this.userService.findBy({ username })
+
+        if (!user) {
+            throw new NotFoundException('User not found')
+        }
+
+        return this.donationService.create({ ...data, to: user.id })
+    }
+}
