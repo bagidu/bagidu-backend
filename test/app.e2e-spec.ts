@@ -3,33 +3,91 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { UserService } from '../src/user/user.service';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongooseModule } from '@nestjs/mongoose';
+import { CreateUserDto } from '../src/user/dtos/create-user.dto';
+import { AuthService } from '../src/auth/auth.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-  let userServie: UserService
+  let userService: UserService
+  let authService: AuthService
+  let mongod: MongoMemoryServer
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    mongod = new MongoMemoryServer()
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        MongooseModule.forRootAsync({
+          useFactory: async () => {
+            const uri = await mongod.getConnectionString()
+            return {
+              uri,
+              useNewUrlParser: true,
+              useUnifiedTopology: true,
+              useCreateIndex: true
+            }
+          }
+        }),
+        AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    userServie = moduleFixture.get(UserService)
+
+    userService = moduleFixture.get(UserService)
+    authService = moduleFixture.get(AuthService)
     await app.init();
   });
 
-  it('defined', () => {
-    expect(userServie).toBeDefined()
+  afterEach(async () => {
+    await app.close()
+    await mongod.stop()
   })
+
 
   it('/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
       .expect('Hello World!');
+
   });
 
-  afterAll(async () => {
-    await app.close()
+  describe('/auth', () => {
+    const user = new CreateUserDto()
+    user.email = 'email@local.dev'
+    user.password = 'secret'
+    user.username = 'sucipto'
+
+    it('/login successfully', async () => {
+      const sucipto = await userService.create(user)
+      expect(sucipto).toBeDefined()
+
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({ username: user.username, password: user.password })
+        .expect(201)
+        .then(response => {
+          expect(response.body.access_token).toBeDefined()
+        })
+    })
+
+    it('/login unauthorized', async () => {
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({ username: 'xx' })
+        .expect(401)
+    })
+
+    it('get profile using token', async () => {
+      const sucipto = await userService.create(user)
+      expect(sucipto).toBeDefined()
+      const auth = await authService.login(sucipto)
+      return request(app.getHttpServer())
+        .get('/auth/profile')
+        .set('Authorization', 'Bearer ' + auth.access_token)
+        .expect(200)
+    })
   })
+
 });

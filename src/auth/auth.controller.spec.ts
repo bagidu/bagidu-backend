@@ -4,12 +4,11 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
-import { LocalAuthGuard } from './local-auth.guard';
 
 describe('Auth Controller', () => {
   let controller: AuthController;
-  let authService: AuthService;
-  let userService: UserService;
+  // let authService: AuthService;
+  // let userService: UserService;
   let jwtService: JwtService;
 
   beforeEach(async () => {
@@ -33,8 +32,8 @@ describe('Auth Controller', () => {
       .compile();
 
     controller = module.get<AuthController>(AuthController);
-    authService = module.get(AuthService)
-    userService = module.get(UserService)
+    // authService = module.get(AuthService)
+    // userService = module.get(UserService)
     jwtService = module.get(JwtService)
   });
 
