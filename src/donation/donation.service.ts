@@ -11,13 +11,13 @@ export class DonationService {
     constructor(@InjectModel('Donation') private donationModel: Model<Donation>) { }
 
     async allByUser(userId: string): Promise<DonationEntity[]> {
-        const donations = await this.donationModel.find({ to: userId }).lean().populate('to')
+        const donations = await this.donationModel.find({ to: userId }).populate('to').lean()
         return plainToClass(DonationEntity, donations)
     }
 
     async create(data: MakeDonationDto): Promise<DonationEntity> {
         let donation = await this.donationModel.create(data)
-        donation = await this.donationModel.findOne({ _id: donation._id }).lean().populate('to')
+        donation = await this.donationModel.findOne({ _id: donation._id }).populate('to').lean()
         return plainToClass(DonationEntity, donation)
     }
 }
