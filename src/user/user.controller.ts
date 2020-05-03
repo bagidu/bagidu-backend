@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException, UseInterceptors, ClassSerializerInterceptor, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -34,6 +35,13 @@ export class UserController {
         }
 
         return this.userService.create(createUserDto)
+    }
+
+    @Get('/me')
+    @UseGuards(JwtAuthGuard)
+    async profile(@Req() req: any) {
+        const { user } = req
+        return this.userService.findById(user.id)
     }
 
 }

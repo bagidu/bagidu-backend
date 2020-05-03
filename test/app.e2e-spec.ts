@@ -7,6 +7,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CreateUserDto } from '../src/user/dtos/create-user.dto';
 import { AuthService } from '../src/auth/auth.service';
+import { User } from 'src/user/entities/user.entity';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -87,6 +88,29 @@ describe('AppController (e2e)', () => {
         .get('/auth/profile')
         .set('Authorization', 'Bearer ' + auth.access_token)
         .expect(200)
+    })
+  })
+
+  describe('/user', () => {
+    it('GET /profile response with user', async () => {
+      const user = new CreateUserDto()
+      user.email = 'email@local.dev'
+      user.password = 'secret'
+      user.username = 'sucipto'
+
+      const u: User = await userService.create(user)
+      const auth = await authService.login(u)
+
+      return request(app.getHttpServer())
+        .get('/user/me')
+        .set('Authorization', 'Bearer ' + auth.access_token)
+        .expect(200)
+        .then(resp => {
+          expect(resp.body).toEqual(expect.objectContaining({
+            email: user.email,
+            username: user.username
+          }))
+        })
     })
   })
 
