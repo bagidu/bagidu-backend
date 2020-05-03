@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { getModelToken } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { BadRequestException } from '@nestjs/common';
 
@@ -15,10 +14,12 @@ describe('User Controller', () => {
     module = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
-        UserService,
         {
-          provide: getModelToken('User'),
-          useValue: {}
+          provide: UserService,
+          useValue: {
+            findBy: jest.fn(),
+            create: jest.fn()
+          }
         }
       ]
     }).compile();
@@ -54,7 +55,7 @@ describe('User Controller', () => {
 
       jest.spyOn(service, 'findBy').mockReturnValue(Promise.resolve(null))
 
-      expect(await controller.create(moana))
+      return expect(await controller.create(moana))
         .toEqual(expect.objectContaining({
           name: "Moana",
           username: 'moana',
@@ -64,7 +65,7 @@ describe('User Controller', () => {
 
     it('bad request on username or email in use', async () => {
       jest.spyOn(service, 'findBy').mockReturnValue(Promise.resolve(new User()))
-      expect(controller.create(moana)).rejects.toThrow(BadRequestException)
+      return expect(controller.create(moana)).rejects.toThrow(BadRequestException)
     })
   })
 });
