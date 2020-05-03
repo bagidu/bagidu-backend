@@ -53,7 +53,7 @@ describe('User Controller', () => {
         return Promise.resolve(user)
       })
 
-      jest.spyOn(service, 'findBy').mockReturnValue(Promise.resolve(null))
+      jest.spyOn(service, 'findBy').mockReturnValueOnce(Promise.resolve(null))
 
       return expect(await controller.create(moana))
         .toEqual(expect.objectContaining({
@@ -63,9 +63,31 @@ describe('User Controller', () => {
         }))
     })
 
-    it('bad request on username or email in use', async () => {
-      jest.spyOn(service, 'findBy').mockReturnValue(Promise.resolve(new User()))
+    it('bad request on email in use', () => {
+      jest.spyOn(service, 'findBy').mockImplementationOnce((q): Promise<User> => {
+        if (q.email === 'moana@motunui.island') {
+          return Promise.resolve(new User())
+        } else {
+          return Promise.resolve(null)
+        }
+      })
+
       return expect(controller.create(moana)).rejects.toThrow(BadRequestException)
     })
+
+    it('bad request on username in used', async () => {
+      jest.spyOn(service, 'findBy').mockImplementation((q): Promise<User> => {
+        if (q.username === moana.username) {
+          return Promise.resolve(new User())
+        } else {
+          return Promise.resolve(null)
+        }
+      })
+
+      return expect(controller.create(moana))
+        .rejects
+        .toThrow(BadRequestException)
+    })
   })
+
 });

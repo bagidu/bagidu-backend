@@ -21,7 +21,7 @@ export class UserService {
         return plainToClass(UserEntity, result)
     }
 
-    async findById(id: string): Promise<UserEntity> {
+    async findById(id: string): Promise<UserEntity | null> {
         const user = await this.userModel.findOne({
             $or: [
                 { _id: isValidObjectId(id) ? new ObjectID(id) : new ObjectID() },

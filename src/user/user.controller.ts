@@ -7,19 +7,19 @@ import { CreateUserDto } from './dtos/create-user.dto';
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
-    @Get()
-    async index() {
-        return this.userService.all()
-    }
+    // @Get()
+    // async index() {
+    //     return this.userService.all()
+    // }
 
-    @Get(':id')
-    async detail(@Param('id') id: string) {
-        const user = await this.userService.findById(id)
-        if (!user) {
-            throw new NotFoundException('User not found')
-        }
-        return user
-    }
+    // @Get(':id')
+    // async detail(@Param('id') id: string) {
+    //     const user = await this.userService.findById(id)
+    //     if (!user) {
+    //         throw new NotFoundException('User not found')
+    //     }
+    //     return user
+    // }
 
     @Post()
     async create(@Body() createUserDto: CreateUserDto) {
