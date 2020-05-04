@@ -18,7 +18,8 @@ describe('User Controller', () => {
           provide: UserService,
           useValue: {
             findBy: jest.fn(),
-            create: jest.fn()
+            create: jest.fn(),
+            findById: jest.fn()
           }
         }
       ]
@@ -87,6 +88,16 @@ describe('User Controller', () => {
       return expect(controller.create(moana))
         .rejects
         .toThrow(BadRequestException)
+    })
+
+    it('/me return user', () => {
+      const user = new User()
+      user._id = '123'
+      user.name = 'User Satu'
+
+      jest.spyOn(service, 'findById').mockResolvedValue(user)
+
+      expect(controller.profile({ user: { id: '123' } })).resolves.toEqual(user)
     })
   })
 

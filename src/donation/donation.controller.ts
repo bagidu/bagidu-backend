@@ -1,8 +1,8 @@
 import { Controller, Get, UseGuards, Req, Body, Post, Param, NotFoundException, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { DonationService } from './donation.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MakeDonationDto } from './dtos/make-donation.dto';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 
 @Controller('donation')
 @UseInterceptors(ClassSerializerInterceptor)
