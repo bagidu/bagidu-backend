@@ -3,7 +3,7 @@ import { DonationController } from './donation.controller';
 import { DonationService } from './donation.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DonationSchema } from './schemas/donation.schema';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [

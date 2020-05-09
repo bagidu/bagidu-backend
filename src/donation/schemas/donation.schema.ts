@@ -19,6 +19,15 @@ export const DonationSchema = new mongoose.Schema(
         to: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
+        },
+        status: {
+            type: String,
+            enum:['SUCCESS','PENDING','FAILED'],
+            default:'PENDING'
+        },
+        qr: {
+            type: String,
+            required: false
         }
     },
     {
