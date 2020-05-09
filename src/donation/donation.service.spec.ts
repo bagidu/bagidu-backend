@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DonationService } from './donation.service';
 import { getModelToken } from '@nestjs/mongoose';
+import { XenditService } from '../xendit/xendit.service';
 
 describe('DonationService', () => {
   let service: DonationService;
@@ -12,6 +13,10 @@ describe('DonationService', () => {
         {
           provide: getModelToken('Donation'),
           useValue: {}
+        },
+        {
+          provide: XenditService,
+          useValue:{}
         }
       ],
     }).compile();

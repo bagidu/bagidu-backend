@@ -7,10 +7,11 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { Connection } from 'mongoose';
 import { DonationModule } from './donation/donation.module';
+import { XenditModule } from './xendit/xendit.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -23,7 +24,8 @@ import { DonationModule } from './donation/donation.module';
     }),
     UserModule,
     AuthModule,
-    DonationModule
+    DonationModule,
+    XenditModule
   ],
   controllers: [AppController],
   providers: [AppService],

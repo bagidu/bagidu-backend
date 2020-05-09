@@ -23,7 +23,7 @@ export class DonationController {
         const user = await this.userService.findBy({ username })
 
         if (!user) {
-            throw new NotFoundException('User not found')
+            throw new NotFoundException(`User ${username} not found`)
         }
 
         return this.donationService.create({ ...data, to: user.id })
