@@ -1,9 +1,10 @@
-import { IsNotEmpty } from "class-validator"
+import { IsNotEmpty, Min } from "class-validator"
 
 export class MakeDonationDto {
+    @IsNotEmpty()
     name: string
     to: string
-    @IsNotEmpty()
+    @Min(1500)
     amount: number
     message: string
 }
