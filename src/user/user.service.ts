@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId } from 'mongoose';
+import { Model, isValidObjectId, mongo } from 'mongoose';
 import { User } from './interfaces/user.interface';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { ObjectID } from 'mongodb'
 import { User as UserEntity } from './entities/user.entity'
 import { plainToClass } from 'class-transformer';
+
 @Injectable()
 export class UserService {
     constructor(@InjectModel('User') private userModel: Model<User>) { }
@@ -22,9 +22,10 @@ export class UserService {
     }
 
     async findById(id: string): Promise<UserEntity | null> {
+
         const user = await this.userModel.findOne({
             $or: [
-                { _id: isValidObjectId(id) ? new ObjectID(id) : new ObjectID() },
+                { _id: isValidObjectId(id) ? id : new mongo.ObjectId() },
                 { username: id }
             ]
         }).lean()
