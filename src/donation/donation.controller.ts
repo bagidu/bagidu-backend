@@ -3,6 +3,7 @@ import { DonationService } from './donation.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MakeDonationDto } from './dtos/make-donation.dto';
 import { UserService } from '../user/user.service';
+import { MakeDonationResponse } from './dtos/make-donation.response';
 
 @Controller('donation')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -12,11 +13,11 @@ export class DonationController {
         private readonly userService: UserService
     ) { }
 
-    @UseGuards(JwtAuthGuard)
-    @Get()
-    async all(@Req() { user }: any) {
-        return this.donationService.allByUser(user.id)
-    }
+    // @UseGuards(JwtAuthGuard)
+    // @Get()
+    // async all(@Req() { user }: any) {
+    //     return this.donationService.allByUser(user.id)
+    // }
 
     @Post(':username')
     async create(@Body() data: MakeDonationDto, @Param('username') username: string) {
@@ -26,6 +27,7 @@ export class DonationController {
             throw new NotFoundException(`User ${username} not found`)
         }
 
-        return this.donationService.create({ ...data, to: user.id })
+        const donation = await this.donationService.create(data,username)
+        return MakeDonationResponse.fromModel(donation)
     }
 }

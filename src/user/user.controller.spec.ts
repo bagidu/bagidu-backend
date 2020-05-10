@@ -73,7 +73,9 @@ describe('User Controller', () => {
         }
       })
 
-      return expect(controller.create(moana)).rejects.toThrow(BadRequestException)
+      return expect(controller.create(moana))
+      .rejects
+      .toThrow(BadRequestException)
     })
 
     it('bad request on username in used', async () => {
