@@ -27,7 +27,7 @@ export class DonationController {
             throw new NotFoundException(`User ${username} not found`)
         }
 
-        const donation = await this.donationService.create(data,username)
+        const donation = await this.donationService.create(data, user.id)
         return MakeDonationResponse.fromModel(donation)
     }
 }

@@ -16,9 +16,9 @@ export class DonationService {
         return await this.donationModel.find({ to: userId })
     }
 
-    async create(data: MakeDonationDto, to:string): Promise<Donation> {
-        const donation = await this.donationModel.create({...data,to})
-        const xendit = await this.xenidtService.createQr(donation.id,donation.amount)
+    async create(data: MakeDonationDto, to: string): Promise<Donation> {
+        const donation = await this.donationModel.create({ ...data, to })
+        const xendit = await this.xenidtService.createQr(donation.id, donation.amount)
 
         donation.qr = xendit.qr_string
         await donation.save()

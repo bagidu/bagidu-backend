@@ -2,9 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DonationService } from './donation.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { XenditService } from '../xendit/xendit.service';
+import { Model } from 'mongoose';
+import { Donation } from './interfaces/donation.interface';
+import { CreateUserDto } from '../user/dtos/create-user.dto';
+import { MakeDonationDto } from './dtos/make-donation.dto';
 
 describe('DonationService', () => {
   let service: DonationService;
+  let model: Model<Donation>
+  let xenditService: XenditService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -12,19 +18,57 @@ describe('DonationService', () => {
         DonationService,
         {
           provide: getModelToken('Donation'),
-          useValue: {}
+          useValue: {
+            find: jest.fn(),
+            create: jest.fn()
+          }
         },
         {
           provide: XenditService,
-          useValue:{}
+          useValue: {
+            createQr: jest.fn()
+          }
         }
       ],
     }).compile();
 
     service = module.get<DonationService>(DonationService);
+    model = module.get(getModelToken('Donation'))
+    xenditService = module.get(XenditService)
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('allByUser', () => {
+    it('return all user data', () => {
+      const result = [
+        { id: 'xxx' }
+      ] as Donation[]
+      jest.spyOn(model, 'find').mockResolvedValue(result)
+      return expect(service.allByUser('xxx')).toBeTruthy()
+    })
+  })
+
+  describe('create donation', () => {
+    it('success', () => {
+      const dto: MakeDonationDto = {
+        name: 'Lubna',
+        amount: 10000,
+        message: 'coba'
+      }
+      const donation = {
+        ...dto,
+        save: jest.fn()
+      } as unknown as Donation
+
+      jest.spyOn(donation, 'save').mockResolvedValue(donation)
+      jest.spyOn(model, 'create').mockResolvedValue(donation)
+      jest.spyOn(xenditService, 'createQr').mockResolvedValue({ 'qr_string': 'XXXX' })
+
+      return expect(service.create(dto, 'sucipto')).resolves
+        .toEqual(expect.objectContaining(dto))
+    })
+  })
 });

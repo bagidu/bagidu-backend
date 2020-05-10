@@ -1,13 +1,27 @@
 import { Donation } from "../interfaces/donation.interface"
-import { plainToClass } from "class-transformer"
+import { plainToClass, Expose, Exclude } from "class-transformer"
 
 export class MakeDonationResponse {
-    name:string
-    amount:number
-    message: string
-    qr:string
+    @Expose({ name: 'id' })
+    _id: string
 
-    static fromModel(donation:Donation) {
-        return plainToClass(MakeDonationResponse,donation)
+    @Expose()
+    name: string
+    @Expose()
+    amount: number
+    @Expose()
+    message: string
+    @Expose()
+    qr: string
+    @Expose()
+    status: string
+
+    // @Expose()
+    // get id() {
+    //     return this._id.toString()
+    // }
+
+    static fromModel(donation: Donation) {
+        return plainToClass(MakeDonationResponse, donation, { strategy: 'excludeAll' })
     }
 }

@@ -53,10 +53,16 @@ describe('Donation Controller', () => {
         qr: 'xxxxxx',
         createdAt: new Date(),
         to: 'lubna',
-        status: 'PENDING'
+        status: 'PENDING',
+        _id: 'xxx'
       } as unknown as Donation
 
-      jest.spyOn(userService, 'findBy').mockResolvedValue(new User())
+      const user = {
+        id: 'yyyy',
+        username: 'lubna'
+      } as User
+
+      jest.spyOn(userService, 'findBy').mockResolvedValue(user)
       jest.spyOn(donationService, 'create').mockResolvedValue(mockDoc)
 
       return expect(controller.create(dto, 'lubna')).resolves
@@ -73,7 +79,7 @@ describe('Donation Controller', () => {
 
       jest.spyOn(userService, 'findBy').mockResolvedValue(null)
 
-      return expect(controller.create(dto,'unknown')).rejects.toThrow(NotFoundException)
+      return expect(controller.create(dto, 'unknown')).rejects.toThrow(NotFoundException)
     })
   })
 });
