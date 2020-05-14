@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { UserService } from '../src/user/user.service';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongoMemoryServer } from 'mongodb-memory-server-global';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CreateUserDto } from '../src/user/dtos/create-user.dto';
 import { AuthService } from '../src/auth/auth.service';

@@ -30,12 +30,10 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
         node-version: 12.x
-    - run: npm install
-    - run: npm install mongodb-memory-server-global-4.0
+    - run: npm ci 
     - run: npm run test:e2e
       env: 
         MONGOMS_DEBUG: 1
