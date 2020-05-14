@@ -21,7 +21,7 @@ describe('AppController (e2e)', () => {
         MongooseModule.forRootAsync({
           useFactory: async () => {
             return {
-              uri: 'mongodb://localhost/bagidu-test',
+              uri: 'mongodb://localhost:27017/bagidu-test',
               useNewUrlParser: true,
               useUnifiedTopology: true,
               useCreateIndex: true,
