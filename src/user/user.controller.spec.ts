@@ -74,8 +74,8 @@ describe('User Controller', () => {
       })
 
       return expect(controller.create(moana))
-      .rejects
-      .toThrow(BadRequestException)
+        .rejects
+        .toThrow(BadRequestException)
     })
 
     it('bad request on username in used', async () => {
@@ -100,6 +100,22 @@ describe('User Controller', () => {
       jest.spyOn(service, 'findById').mockResolvedValue(user)
 
       expect(controller.profile({ user: { id: '123' } })).resolves.toEqual(user)
+    })
+  })
+
+  describe('user detail', () => {
+    it("get user by id", () => {
+      const user = new User()
+      user.name = 'Sucipto'
+      user.username = 'sucipto'
+
+      jest.spyOn(service, 'findById').mockResolvedValue(user)
+      return expect(controller.detail('sucipto')).resolves.toEqual(
+        expect.objectContaining({
+          username: 'sucipto',
+          name: 'Sucipto'
+        })
+      )
     })
   })
 
