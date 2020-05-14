@@ -17,11 +17,12 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     mongod = new MongoMemoryServer()
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRootAsync({
           useFactory: async () => {
-            const uri = await mongod.getConnectionString()
+            const uri = await mongod.getUri()
             return {
               uri,
               useNewUrlParser: true,
