@@ -3,7 +3,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { User } from './entities/user.entity';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('User Controller', () => {
   let controller: UserController;
@@ -116,6 +116,11 @@ describe('User Controller', () => {
           name: 'Sucipto'
         })
       )
+    })
+
+    it('return not found on invalid user', () => {
+        jest.spyOn(service,'findById').mockResolvedValue(null)
+        return expect(controller.detail('unknown')).rejects.toThrow(NotFoundException)
     })
   })
 
