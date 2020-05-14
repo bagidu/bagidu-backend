@@ -92,7 +92,7 @@ describe('AppController (e2e)', () => {
   })
 
   describe('/user', () => {
-    it('GET /profile response with user', async () => {
+    it('GET /me response with user', async () => {
       const user = new CreateUserDto()
       user.email = 'email@local.dev'
       user.password = 'secret'
@@ -103,6 +103,28 @@ describe('AppController (e2e)', () => {
 
       return request(app.getHttpServer())
         .get('/user/me')
+        .set('Authorization', 'Bearer ' + auth.access_token)
+        .expect(200)
+        .then(resp => {
+          expect(resp.body).toEqual(expect.objectContaining({
+            email: user.email,
+            username: user.username
+          }))
+        })
+    })
+
+    it('GET /username respond with user', async () => {
+
+      const user = new CreateUserDto()
+      user.email = 'email@local.dev'
+      user.password = 'secret'
+      user.username = 'sucipto'
+
+      const u: User = await userService.create(user)
+      const auth = await authService.login(u)
+
+      return request(app.getHttpServer())
+        .get('/user/' + user.username)
         .set('Authorization', 'Bearer ' + auth.access_token)
         .expect(200)
         .then(resp => {

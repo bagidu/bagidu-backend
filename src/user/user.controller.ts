@@ -13,14 +13,6 @@ export class UserController {
     //     return this.userService.all()
     // }
 
-    @Get(':id')
-    async detail(@Param('id') id: string) {
-        const user = await this.userService.findById(id)
-        if (!user) {
-            throw new NotFoundException('User not found')
-        }
-        return user
-    }
 
     @Post()
     async create(@Body() createUserDto: CreateUserDto) {
@@ -44,4 +36,12 @@ export class UserController {
         return this.userService.findById(user.id)
     }
 
+    @Get(':id')
+    async detail(@Param('id') id: string) {
+        const user = await this.userService.findById(id)
+        if (!user) {
+            throw new NotFoundException('User not found')
+        }
+        return user
+    }
 }
