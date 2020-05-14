@@ -35,4 +35,5 @@ jobs:
       with:
         node-version: 12.x
     - run: npm install
+    - run: npm install mongodb-memory-server-global-4.0
     - run: npm run test:e2e
