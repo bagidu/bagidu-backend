@@ -27,7 +27,7 @@ jobs:
   
   e2e:
 
-    runs-on:  macos-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js 12.x
@@ -37,3 +37,5 @@ jobs:
     - run: npm install
     - run: npm install mongodb-memory-server-global-4.0
     - run: npm run test:e2e
+      env: 
+        MONGOMS_DEBUG: 1
