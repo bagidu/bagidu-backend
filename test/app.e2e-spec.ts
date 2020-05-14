@@ -18,17 +18,19 @@ describe('AppController (e2e)', () => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRootAsync({
-          useFactory: async () => {
-            return {
-              uri: 'mongodb://localhost:27017/bagidu-test',
-              useNewUrlParser: true,
-              useUnifiedTopology: true,
-              useCreateIndex: true,
-            }
-          }
-        }),
-        AppModule],
+        // MongooseModule.forRootAsync({
+        //   useFactory: async () => {
+        //     return {
+        //       uri: 'mongodb://localhost:27017/bagidu-test',
+        //       useNewUrlParser: true,
+        //       useUnifiedTopology: true,
+        //       useCreateIndex: true,
+        //     }
+        //   }
+        // }),
+        MongooseModule.forRoot('mongodb://localhost:27017/bagidu-test'),
+        AppModule
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -41,6 +43,7 @@ describe('AppController (e2e)', () => {
   });
 
   afterEach(async () => {
+    console.log('db name:', appModule.connection.name)
     await appModule.connection.dropDatabase()
     await app.close()
   })
