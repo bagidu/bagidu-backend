@@ -30,4 +30,9 @@ export class DonationController {
         const donation = await this.donationService.create(data, user.id)
         return MakeDonationResponse.fromModel(donation)
     }
+
+    //@Get('id')
+    //async detail(@Param('id') id:string) {
+    //    
+    //}
 }
