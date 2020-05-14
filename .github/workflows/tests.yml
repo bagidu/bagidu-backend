@@ -21,18 +21,12 @@ jobs:
         node-version: 12.x
     - run: npm ci
     - run: npm run test:cov
-    - run: npm install -g codecov
-    - run: codecov -t 30ab91ef-9d66-44d1-8efa-a188abeae755
+    - name: 'Send Coverage Report'
+      run: npm install -g codecov && codecov -t 30ab91ef-9d66-44d1-8efa-a188abeae755
   
   e2e:
 
     runs-on: ubuntu-latest
-
-    services:
-      mongodb:
-        image: mongo:4.2.6
-        ports:
-          - 27017:27017
 
     steps:
     - uses: actions/checkout@v2
@@ -41,5 +35,3 @@ jobs:
         node-version: 12.x
     - run: npm ci 
     - run: npm run test:e2e
-      env:
-        MONGODB_URI: 'mongodb://localhost:27017/test'

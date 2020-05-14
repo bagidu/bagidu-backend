@@ -1,35 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
 import { UserService } from '../src/user/user.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CreateUserDto } from '../src/user/dtos/create-user.dto';
 import { AuthService } from '../src/auth/auth.service';
 import { User } from 'src/user/entities/user.entity';
+import { MongoMemoryServer } from 'mongodb-memory-server'
+import { AuthModule } from '../src/auth/auth.module';
+import { UserModule } from '../src/user/user.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let userService: UserService
   let authService: AuthService
-  let appModule: AppModule
+  let mongod: MongoMemoryServer
 
   beforeEach(async () => {
-
+    mongod = new MongoMemoryServer()
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        // MongooseModule.forRootAsync({
-        //   useFactory: async () => {
-        //     return {
-        //       uri: 'mongodb://localhost:27017/bagidu-test',
-        //       useNewUrlParser: true,
-        //       useUnifiedTopology: true,
-        //       useCreateIndex: true,
-        //     }
-        //   }
-        // }),
-        MongooseModule.forRoot('mongodb://localhost:27017/bagidu-test'),
-        AppModule
+        MongooseModule.forRootAsync({
+          useFactory: async () => {
+            return {
+              uri: await mongod.getUri(),
+              useNewUrlParser: true,
+              useUnifiedTopology: true,
+              useCreateIndex: true,
+            }
+          }
+        }),
+        AuthModule,
+        UserModule
       ],
     }).compile();
 
@@ -37,25 +39,23 @@ describe('AppController (e2e)', () => {
 
     userService = moduleFixture.get(UserService)
     authService = moduleFixture.get(AuthService)
-    appModule = moduleFixture.get(AppModule)
 
     await app.init();
   });
 
   afterEach(async () => {
-    console.log('db name:', appModule.connection.name)
-    await appModule.connection.dropDatabase()
     await app.close()
+    await mongod.stop()
   })
 
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  // it('/ (GET)', () => {
+  //   return request(app.getHttpServer())
+  //     .get('/')
+  //     .expect(200)
+  //     .expect('Hello World!');
 
-  });
+  // });
 
   describe('/auth', () => {
     const user = new CreateUserDto()
