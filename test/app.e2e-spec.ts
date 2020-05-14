@@ -3,7 +3,6 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { UserService } from '../src/user/user.service';
-import { MongoMemoryServer } from 'mongodb-memory-server-global';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CreateUserDto } from '../src/user/dtos/create-user.dto';
 import { AuthService } from '../src/auth/auth.service';
@@ -13,24 +12,19 @@ describe('AppController (e2e)', () => {
   let app: INestApplication;
   let userService: UserService
   let authService: AuthService
-  let mongod: MongoMemoryServer
+  let appModule: AppModule
 
   beforeEach(async () => {
-    mongod = new MongoMemoryServer()
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRootAsync({
           useFactory: async () => {
-            const uri = await mongod.getUri()
             return {
-              uri,
+              uri: 'mongodb://localhost/bagidu-test',
               useNewUrlParser: true,
               useUnifiedTopology: true,
               useCreateIndex: true,
-              autoReconnect: true,
-              reconnectTries: 3,
-              reconnectInterval: 1000
             }
           }
         }),
@@ -41,12 +35,14 @@ describe('AppController (e2e)', () => {
 
     userService = moduleFixture.get(UserService)
     authService = moduleFixture.get(AuthService)
+    appModule = moduleFixture.get(AppModule)
+
     await app.init();
   });
 
   afterEach(async () => {
+    await appModule.connection.dropDatabase()
     await app.close()
-    await mongod.stop()
   })
 
 
