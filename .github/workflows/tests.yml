@@ -22,7 +22,7 @@ jobs:
     - run: npm ci
     - run: npm run test:cov
     - run: npm install -g codecov
-    - run: codecov
+    - run: codecov -t 30ab91ef-9d66-44d1-8efa-a188abeae755
   
   e2e:
 
