@@ -27,7 +27,10 @@ describe('AppController (e2e)', () => {
               uri,
               useNewUrlParser: true,
               useUnifiedTopology: true,
-              useCreateIndex: true
+              useCreateIndex: true,
+              autoReconnect: true,
+              reconnectTries: 3,
+              reconnectInterval: 1000
             }
           }
         }),
