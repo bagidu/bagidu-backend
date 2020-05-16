@@ -88,11 +88,15 @@ describe('Donation Controller', () => {
     it('get from public', () => {
       const donation = {
         id: 'someid',
-        amount: 10000
+        amount: 10000,
+        status: 'PENDING'
       } as unknown as Donation
       jest.spyOn(donationService, 'detail').mockResolvedValue(donation)
       return expect(controller.detail('someid')).resolves.toEqual(
-        expect.objectContaining(donation)
+        expect.objectContaining({
+          amount: 10000,
+          status: 'PENDING'
+        })
       )
     })
 
