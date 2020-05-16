@@ -16,11 +16,6 @@ export class MakeDonationResponse {
     @Expose()
     status: string
 
-    // @Expose()
-    // get id() {
-    //     return this._id.toString()
-    // }
-
     static fromModel(donation: Donation) {
         return plainToClass(MakeDonationResponse, donation, { strategy: 'excludeAll' })
     }
