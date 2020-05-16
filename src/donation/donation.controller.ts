@@ -31,13 +31,13 @@ export class DonationController {
         return MakeDonationResponse.fromModel(donation)
     }
 
-    @Get('id')
+    @Get(':id')
     async detail(@Param('id') id: string) {
         const donation = await this.donationService.detail(id)
         if (!donation) {
             throw new NotFoundException('Donation not found')
         }
 
-        return donation
+        return MakeDonationResponse.fromModel(donation)
     }
 }
