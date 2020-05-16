@@ -20,7 +20,8 @@ describe('DonationService', () => {
           provide: getModelToken('Donation'),
           useValue: {
             find: jest.fn(),
-            create: jest.fn()
+            create: jest.fn(),
+            findById: jest.fn()
           }
         },
         {
@@ -70,5 +71,13 @@ describe('DonationService', () => {
       return expect(service.create(dto, 'sucipto')).resolves
         .toEqual(expect.objectContaining(dto))
     })
+  })
+
+  it('detail / find by id', () => {
+    const result = {
+      id: 'real-id'
+    } as Donation
+    jest.spyOn(model, 'findById').mockResolvedValue(result)
+    return expect(service.detail('real-id')).toBeTruthy()
   })
 });

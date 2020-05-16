@@ -18,7 +18,8 @@ describe('Donation Controller', () => {
         {
           provide: DonationService,
           useValue: {
-            create: jest.fn()
+            create: jest.fn(),
+            detail: jest.fn()
           }
         },
         {
@@ -80,6 +81,24 @@ describe('Donation Controller', () => {
       jest.spyOn(userService, 'findBy').mockResolvedValue(null)
 
       return expect(controller.create(dto, 'unknown')).rejects.toThrow(NotFoundException)
+    })
+  })
+
+  describe('donation detail', () => {
+    it('get from public', () => {
+      const donation = {
+        id: 'someid',
+        amount: 10000
+      } as unknown as Donation
+      jest.spyOn(donationService, 'detail').mockResolvedValue(donation)
+      return expect(controller.detail('someid')).resolves.toEqual(
+        expect.objectContaining(donation)
+      )
+    })
+
+    it('not found', () => {
+      jest.spyOn(donationService, 'detail').mockResolvedValue(null)
+      return expect(controller.detail('invalid-id')).rejects.toThrow(NotFoundException)
     })
   })
 });
