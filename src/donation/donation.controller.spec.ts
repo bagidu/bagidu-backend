@@ -4,7 +4,7 @@ import { DonationService } from './donation.service';
 import { UserService } from '../user/user.service';
 import { User } from '../user/entities/user.entity';
 import { Donation } from './interfaces/donation.interface';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { XenditCallbackDto } from './dtos/xendit-callback.dto';
 
@@ -21,7 +21,8 @@ describe('Donation Controller', () => {
           provide: DonationService,
           useValue: {
             create: jest.fn(),
-            detail: jest.fn()
+            detail: jest.fn(),
+            validate: jest.fn()
           }
         },
         {
@@ -105,6 +106,47 @@ describe('Donation Controller', () => {
     it('not found', () => {
       jest.spyOn(donationService, 'detail').mockResolvedValue(null)
       return expect(controller.detail('invalid-id')).rejects.toThrow(NotFoundException)
+    })
+  })
+
+  describe('xendit callback', () => {
+    it('not found', () => {
+      jest.spyOn(donationService, 'detail').mockResolvedValue(null)
+      return expect(controller.callback('xxx', {} as XenditCallbackDto)).rejects
+        .toThrow(NotFoundException)
+    })
+
+    it('payment completed', () => {
+      const donation = {
+        save: jest.fn()
+      } as unknown as Donation
+      jest.spyOn(donationService, 'detail').mockResolvedValue(donation)
+      jest.spyOn(donationService, 'validate').mockResolvedValue(true)
+
+      const dto = {
+        status: 'COMPLETED'
+      } as XenditCallbackDto
+
+      return expect(controller.callback('xxx', dto)).resolves
+        .toEqual("OK")
+
+    })
+
+    it('payment invalid', () => {
+      const donation = {
+        save: jest.fn()
+      } as unknown as Donation
+
+      jest.spyOn(donationService, 'detail').mockResolvedValue(donation)
+      jest.spyOn(donationService, 'validate').mockResolvedValue(false)
+
+      const dto = {
+        status: 'COMPLETED'
+      } as XenditCallbackDto
+
+      return expect(controller.callback('xxx', dto)).rejects
+        .toThrow(BadRequestException)
+
     })
   })
 

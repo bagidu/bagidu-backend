@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Req, Body, Post, Param, NotFoundException, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, Get, UseGuards, Req, Body, Post, Param, NotFoundException, UseInterceptors, ClassSerializerInterceptor, BadRequestException } from '@nestjs/common';
 import { DonationService } from './donation.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MakeDonationDto } from './dtos/make-donation.dto';
@@ -52,12 +52,14 @@ export class DonationController {
         }
 
         // Check on Xendit
-        const valid = this.donationService.validate(id)
+        const valid = await this.donationService.validate(id)
         if (data.status === 'COMPLETED' && valid) {
+            console.log('status', data.status, 'valid', valid)
             donation.status = 'SUCCESS'
             await donation.save()
+            return "OK"
         }
 
-        return "OK :)"
+        throw new BadRequestException('Invalid payment')
     }
 }
