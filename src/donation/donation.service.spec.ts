@@ -81,7 +81,7 @@ describe('DonationService', () => {
     return expect(service.detail('real-id')).toBeTruthy()
   })
 
-  it('validate', () => {
+  it('validate:true', () => {
     jest.spyOn(xenditService, 'transactionStatus').mockResolvedValue({
       'external_id': 'xxx',
       'status': 'INACTIVE' // equal to completed
@@ -91,4 +91,28 @@ describe('DonationService', () => {
       .resolves
       .toBeTruthy()
   })
+
+  it('validate:wrong id', () => {
+    jest.spyOn(xenditService, 'transactionStatus').mockResolvedValue({
+      'external_id': 'xxx',
+      'status': 'INACTIVE' // equal to completed
+    })
+
+    return expect(service.validate('yyy'))
+      .resolves
+      .toBeFalsy()
+  })
+
+  it('validate:still active', () => {
+    jest.spyOn(xenditService, 'transactionStatus').mockResolvedValue({
+      'external_id': 'xxx',
+      'status': 'ACTIVE' // equal to completed
+    })
+
+    return expect(service.validate('xxx'))
+      .resolves
+      .toBeFalsy()
+  })
+
+
 });
