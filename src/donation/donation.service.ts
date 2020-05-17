@@ -29,4 +29,17 @@ export class DonationService {
     async detail(id: string): Promise<Donation> {
         return this.donationModel.findById(id)
     }
+
+    async validate(id: string): Promise<boolean> {
+        const trx = await this.xenidtService.transactionStatus(id)
+        if (trx.external_id !== id) {
+            return false
+        }
+
+        if (trx.status === 'ACTIVE') {
+            return false
+        }
+
+        return true
+    }
 }

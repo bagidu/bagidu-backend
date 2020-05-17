@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MakeDonationDto } from './dtos/make-donation.dto';
 import { UserService } from '../user/user.service';
 import { MakeDonationResponse } from './dtos/make-donation.response';
+import { XenditCallbackDto } from './dtos/xendit-callback.dto';
 
 @Controller('donation')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -39,5 +40,24 @@ export class DonationController {
         }
 
         return MakeDonationResponse.fromModel(donation)
+    }
+
+
+    @Post(':id/callback')
+    async callback(@Param('id') id: string, @Body() data: XenditCallbackDto) {
+        // Check If Exists
+        const donation = await this.donationService.detail(id)
+        if (!donation) {
+            throw new NotFoundException('Donation not found')
+        }
+
+        // Check on Xendit
+        const valid = this.donationService.validate(id)
+        if (data.status === 'COMPLETED' && valid) {
+            donation.status = 'SUCCESS'
+            await donation.save()
+        }
+
+        return "OK :)"
     }
 }

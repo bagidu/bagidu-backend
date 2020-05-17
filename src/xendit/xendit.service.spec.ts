@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { XenditService } from './xendit.service';
 import { ConfigModule } from '@nestjs/config';
 import { HttpService, HttpModule } from '@nestjs/common';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { AxiosResponse } from 'axios'
 
 describe('XenditService', () => {

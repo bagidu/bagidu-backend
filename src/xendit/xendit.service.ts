@@ -7,12 +7,14 @@ import { map } from 'rxjs/operators'
 export class XenditService {
     private apiKey: string;
     private apiUrl = 'https://api.xendit.co';
+    private appUrl: string
 
     constructor(
         private configService: ConfigService,
         private httpService: HttpService
     ) {
         this.apiKey = this.configService.get<string>('XENDIT_KEY')
+        this.appUrl = this.configService.get<string>('APP_URL')
     }
 
     async createQr(id: string, amount: number): Promise<any> {
@@ -23,7 +25,7 @@ export class XenditService {
                 type: 'DYNAMIC',
                 amount: amount,
                 // eslint-disable-next-line @typescript-eslint/camelcase
-                callback_url: 'https://pringstudio.com/bagidu/callback/' + id
+                callback_url: `${this.appUrl}/donation/${id}/callback`
             },
             {
                 auth: {
@@ -35,5 +37,20 @@ export class XenditService {
             map(response => response.data)
         ).toPromise()
 
+    }
+
+    async transactionStatus(id: string) {
+        return this.httpService.get(`${this.apiUrl}/qr_codes/${id}`,
+            {
+                auth: {
+                    username: this.apiKey,
+                    password: ''
+                }
+            }
+        )
+            .pipe(
+                map(response => response.data)
+            )
+            .toPromise()
     }
 }
