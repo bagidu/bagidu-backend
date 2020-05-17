@@ -54,7 +54,6 @@ export class DonationController {
         // Check on Xendit
         const valid = await this.donationService.validate(id)
         if (data.status === 'COMPLETED' && valid) {
-            console.log('status', data.status, 'valid', valid)
             donation.status = 'SUCCESS'
             await donation.save()
             return "OK"
