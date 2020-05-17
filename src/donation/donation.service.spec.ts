@@ -4,7 +4,6 @@ import { getModelToken } from '@nestjs/mongoose';
 import { XenditService } from '../xendit/xendit.service';
 import { Model } from 'mongoose';
 import { Donation } from './interfaces/donation.interface';
-import { CreateUserDto } from '../user/dtos/create-user.dto';
 import { MakeDonationDto } from './dtos/make-donation.dto';
 
 describe('DonationService', () => {
@@ -27,7 +26,8 @@ describe('DonationService', () => {
         {
           provide: XenditService,
           useValue: {
-            createQr: jest.fn()
+            createQr: jest.fn(),
+            transactionStatus: jest.fn()
           }
         }
       ],
@@ -79,5 +79,16 @@ describe('DonationService', () => {
     } as Donation
     jest.spyOn(model, 'findById').mockResolvedValue(result)
     return expect(service.detail('real-id')).toBeTruthy()
+  })
+
+  it('validate', () => {
+    jest.spyOn(xenditService, 'transactionStatus').mockResolvedValue({
+      'external_id': 'xxx',
+      'status': 'INACTIVE' // equal to completed
+    })
+
+    return expect(service.validate('xxx'))
+      .resolves
+      .toBeTruthy()
   })
 });
