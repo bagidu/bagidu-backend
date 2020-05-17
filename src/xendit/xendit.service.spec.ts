@@ -38,4 +38,39 @@ describe('XenditService', () => {
         'qr_string': 'xxxx'
       }))
   })
+
+  it('transaction status', () => {
+    jest.spyOn(http, 'get').mockImplementation(() => {
+      const resp = {
+      } as AxiosResponse
+      resp.data = {
+        'external_id': 'xxx'
+      }
+      return of(resp)
+    })
+
+    return expect(service.transactionStatus('xxx'))
+      .resolves
+      .toEqual(
+        expect.objectContaining({
+          'external_id': 'xxx'
+        })
+      )
+  })
+
+  // it('transaction status: error', () => {
+  //   jest.spyOn(http, 'get').mockImplementation(() => {
+  //     const resp = {
+  //     } as AxiosResponse
+  //     // resp.data = {
+  //     //   'external_id': 'xxx'
+  //     // }
+  //     resp.status = 400
+  //     return of(resp)
+  //   })
+
+  //   return expect(service.transactionStatus('xxx'))
+  //     .rejects
+  //     .toThrowError()
+  // })
 });

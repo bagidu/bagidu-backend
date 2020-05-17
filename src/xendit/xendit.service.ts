@@ -1,6 +1,5 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Donation } from '../donation/entities/donation.entity';
 import { map } from 'rxjs/operators'
 
 @Injectable()
