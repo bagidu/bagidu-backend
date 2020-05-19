@@ -1,7 +1,8 @@
-import { Controller, Post, Request, UseGuards, UseInterceptors, ClassSerializerInterceptor, Get } from '@nestjs/common';
+import { Controller, Post, UseGuards, UseInterceptors, ClassSerializerInterceptor, Get, Res, Req } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { Response } from 'express';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -10,13 +11,23 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Request() req: any) {
-        return this.authService.login(req.user)
+    async login(@Req() req: any, @Res() response: Response) {
+        const data = await this.authService.login(req.user)
+        const expDate = new Date()
+        expDate.setDate(expDate.getDate() + 7)
+
+        response.cookie('refresh_token', 'tokenn', {
+            expires: expDate,
+            httpOnly: true,
+            // domain: 'localhost'
+        })
+
+        response.send(data)
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('/profile')
-    async profile(@Request() req: any) {
+    async profile(@Req() req: any) {
         return req.user
     }
 }

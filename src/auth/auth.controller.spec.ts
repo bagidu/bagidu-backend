@@ -4,6 +4,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
+import { Response } from 'express';
 
 describe('Auth Controller', () => {
   let controller: AuthController;
@@ -42,15 +43,18 @@ describe('Auth Controller', () => {
   });
 
   it('/login able to login and get token', async () => {
+    const res = {
+      cookie: jest.fn(),
+      send: jest.fn()
+    } as unknown as Response
+
     jest.spyOn(jwtService, 'sign').mockReturnValue('jwt_token')
-    return expect(controller.login({ user: { username: 'username', password: 'password' } }))
-      .resolves
-      .toEqual({
-        'access_token': 'jwt_token'
-      })
-      .catch(err => {
-        expect(err).toBeNull()
-      })
+    await controller.login(
+      { user: { username: 'username', password: 'password' } },
+      res
+    )
+
+    expect(res.send).toHaveBeenCalled()
   })
 
   it('/profile return data on authenticated user', () => {

@@ -24,9 +24,16 @@ export class AuthService {
 
     async login(user: User) {
         const payload = { username: user.username, sub: user.id }
+        const exp = new Date()
+
+        exp.setMinutes(exp.getMinutes() + 15)
+
         return {
             // eslint-disable-next-line @typescript-eslint/camelcase
-            access_token: this.jwtService.sign(payload)
+            access_token: this.jwtService.sign(payload, {
+                expiresIn: '15m'
+            }),
+            expired: exp.getTime()
         }
     }
 }
