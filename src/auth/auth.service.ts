@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt'
@@ -28,11 +29,25 @@ export class AuthService {
 
         exp.setMinutes(exp.getMinutes() + 15)
 
+        // Refresh Token
+        const refresh_token = this.jwtService.sign(
+            {
+                ...payload,
+                type: 'refresh'
+            },
+            {
+                expiresIn: '7d'
+            }
+        )
+
+        // Save Token
+        await this.userService.saveToken(user.id, refresh_token, 'refresh')
+
         return {
-            // eslint-disable-next-line @typescript-eslint/camelcase
             access_token: this.jwtService.sign(payload, {
                 expiresIn: '15m'
             }),
+            refresh_token,
             expired: exp.getTime()
         }
     }

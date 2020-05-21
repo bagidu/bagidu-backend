@@ -63,6 +63,14 @@ describe('AppController (e2e)', () => {
     user.password = 'secret'
     user.username = 'sucipto'
 
+    it('/login invalid user', async () => {
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({ username: 'invalid', password: 'invalid' })
+        .expect(401)
+
+    })
+
     it('/login successfully', async () => {
       const sucipto = await userService.create(user)
       expect(sucipto).toBeDefined()
