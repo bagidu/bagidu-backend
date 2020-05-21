@@ -24,14 +24,3 @@ jobs:
     - name: 'Send Coverage Report'
       run: npm install -g codecov && codecov -t 30ab91ef-9d66-44d1-8efa-a188abeae755
   
-  e2e:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-    - run: npm ci 
-    - run: npm run test:e2e
