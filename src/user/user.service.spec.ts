@@ -88,4 +88,8 @@ describe('UserService', () => {
     user._id = 'someid'
     expect(user.id).toEqual(user._id)
   })
+
+  // it('save token', () => {
+  //   service.saveToken()
+  // })
 });

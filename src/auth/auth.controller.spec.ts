@@ -20,7 +20,9 @@ describe('Auth Controller', () => {
         AuthService,
         {
           provide: UserService,
-          useValue: {}
+          useValue: {
+            saveToken: jest.fn()
+          }
         },
         {
           provide: JwtService,
@@ -49,6 +51,7 @@ describe('Auth Controller', () => {
     } as unknown as Response
 
     jest.spyOn(jwtService, 'sign').mockReturnValue('jwt_token')
+
     await controller.login(
       { user: { username: 'username', password: 'password' } },
       res

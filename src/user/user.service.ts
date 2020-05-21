@@ -5,6 +5,7 @@ import { User } from './interfaces/user.interface';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { User as UserEntity } from './entities/user.entity'
 import { plainToClass } from 'class-transformer';
+import { Token } from './interfaces/token.interface';
 
 @Injectable()
 export class UserService {
@@ -35,5 +36,14 @@ export class UserService {
     async findBy(query: any): Promise<UserEntity> {
         const user = await this.userModel.findOne(query).lean()
         return plainToClass(UserEntity, user)
+    }
+
+    async saveToken(uid: string, token: string, type: string) {
+        const user = await this.userModel.findById(uid)
+        user.tokens.push({
+            token, type
+        } as Token)
+
+        user.save()
     }
 }
