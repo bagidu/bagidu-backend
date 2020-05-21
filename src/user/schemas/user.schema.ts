@@ -48,6 +48,7 @@ UserSchema.pre('save', async function (next) {
         user.password = encrypted
         return next()
     } catch (e) {
+        /* istanbul ignore next */
         return next()
     }
 })
