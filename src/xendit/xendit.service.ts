@@ -19,11 +19,9 @@ export class XenditService {
     async createQr(id: string, amount: number): Promise<any> {
         return this.httpService.post(this.apiUrl + '/qr_codes',
             {
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 external_id: id,
                 type: 'DYNAMIC',
                 amount: amount,
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 callback_url: `${this.appUrl}/donation/${id}/callback`
             },
             {
@@ -38,7 +36,7 @@ export class XenditService {
 
     }
 
-    async transactionStatus(id: string) {
+    async transactionStatus(id: string): Promise<any> {
         return this.httpService.get(`${this.apiUrl}/qr_codes/${id}`,
             {
                 auth: {
