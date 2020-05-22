@@ -1,5 +1,6 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class AppService {
@@ -9,9 +10,11 @@ export class AppService {
     return 'Hello World!';
   }
 
-  @Cron('* */10 * * * *')
+  @Cron('*/10 * * * * *')
   ping(): void {
     console.log('schedule ping')
-    this.http.get('https://api.bagidu.id')
+    this.http.get('https://api.bagidu.id/?ping_schedule').pipe(
+      map(res => res.status)
+    ).subscribe(status => console.log(`ping status: ${status}`))
   }
 }
