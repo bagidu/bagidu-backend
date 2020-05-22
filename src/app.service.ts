@@ -10,9 +10,8 @@ export class AppService {
     return 'Hello World!';
   }
 
-  @Cron('*/10 * * * * *')
+  @Cron('0 */10 * * * *')
   ping(): void {
-    console.log('schedule ping')
     this.http.get('https://api.bagidu.id/?ping_schedule').pipe(
       map(res => res.status)
     ).subscribe(status => console.log(`ping status: ${status}`))
