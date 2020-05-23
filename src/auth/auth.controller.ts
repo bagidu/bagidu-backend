@@ -3,7 +3,6 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { Response } from 'express';
-import { Cookies } from '@nestjsplus/cookies'
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
