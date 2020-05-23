@@ -71,7 +71,7 @@ describe('AppController (e2e)', () => {
 
     })
 
-    it('/login successfully', async () => {
+    it('/login successfully', async done => {
       const sucipto = await userService.create(user)
       expect(sucipto).toBeDefined()
 
@@ -81,6 +81,9 @@ describe('AppController (e2e)', () => {
         .expect(201)
         .then(response => {
           expect(response.body.access_token).toBeDefined()
+          expect(response.body.refresh_token).toBeDefined()
+          expect(response.header['set-cookie'].length).toEqual(1)
+          done()
         })
     })
 

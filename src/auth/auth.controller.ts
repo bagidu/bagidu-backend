@@ -16,7 +16,7 @@ export class AuthController {
         const expDate = new Date()
         expDate.setDate(expDate.getDate() + 7)
 
-        response.cookie('refresh_token', 'tokenn', {
+        response.cookie('refresh_token', data.refresh_token, {
             expires: expDate,
             httpOnly: true,
             // domain: 'localhost'
