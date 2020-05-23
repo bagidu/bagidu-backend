@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt'
 import { User } from '../user/entities/user.entity';
@@ -20,6 +20,24 @@ export class AuthService {
             }
         }
         return null
+    }
+
+    async accessToken(refresh_token: string) {
+        const user = await this.userService.findBy({ 'tokens.token': refresh_token, 'tokens.type': 'refresh' })
+        if (!user) {
+            throw new Error('invalid token')
+        }
+        // console.log('accessToken:user', user)
+        const payload = { username: user.username, sub: user.id }
+        const exp = new Date()
+
+        exp.setMinutes(exp.getMinutes() + 15)
+        return {
+            access_token: this.jwtService.sign(payload, {
+                expiresIn: '15m'
+            }),
+            expired: exp.getTime()
+        }
     }
 
     async login(user: User) {

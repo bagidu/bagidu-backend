@@ -3,7 +3,12 @@ import * as bcrypt from 'bcrypt'
 import { User } from '../interfaces/user.interface'
 
 export const TokenSchema = new mongoose.Schema({
-    token: String,
+    token: {
+        type: String,
+        index: true,
+        unique: true,
+        required: true
+    },
     type: {
         type: String,
         enum: ['refresh'],

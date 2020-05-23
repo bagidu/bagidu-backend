@@ -24,7 +24,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+      expect(appController.getHello()).toBe('Diam itu emas 🤪');
     });
 
     it('cron: ping called', () => {

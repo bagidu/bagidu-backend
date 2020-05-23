@@ -9,6 +9,7 @@ import { User } from 'src/user/entities/user.entity';
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { AuthModule } from '../src/auth/auth.module';
 import { UserModule } from '../src/user/user.module';
+import * as CookieParser from 'cookie-parser'
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -40,6 +41,8 @@ describe('AppController (e2e)', () => {
     userService = moduleFixture.get(UserService)
     authService = moduleFixture.get(AuthService)
 
+    app.use(CookieParser())
+
     await app.init();
   });
 
@@ -47,15 +50,6 @@ describe('AppController (e2e)', () => {
     await app.close()
     await mongod.stop()
   })
-
-
-  // it('/ (GET)', () => {
-  //   return request(app.getHttpServer())
-  //     .get('/')
-  //     .expect(200)
-  //     .expect('Hello World!');
-
-  // });
 
   describe('/auth', () => {
     const user = new CreateUserDto()
@@ -102,6 +96,35 @@ describe('AppController (e2e)', () => {
         .get('/auth/profile')
         .set('Authorization', 'Bearer ' + auth.access_token)
         .expect(200)
+    })
+
+    it('get refresh token using cookie', async done => {
+
+      const u: User = await userService.create(user)
+      const auth = await authService.login(u)
+
+      return request(app.getHttpServer())
+        .post('/auth/token')
+        .set('Cookie', [`refresh_token=${auth.refresh_token}`])
+        .expect(201)
+        .then(response => {
+          expect(response.body.access_token).toBeDefined()
+          done()
+        })
+    })
+
+    it('invalid refresh token return unauthorized', () => {
+      return request(app.getHttpServer())
+        .post('/auth/token')
+        .set('Cookie', [`refresh_token=invalidtoken`])
+        .expect(401)
+    })
+
+    it('empty refresh token return unauthorized', () => {
+
+      return request(app.getHttpServer())
+        .post('/auth/token')
+        .expect(401)
     })
   })
 

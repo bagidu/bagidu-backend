@@ -1,9 +1,9 @@
-import { Controller, Post, UseGuards, UseInterceptors, ClassSerializerInterceptor, Get, Res, Req } from '@nestjs/common';
+import { Controller, Post, UseGuards, UseInterceptors, ClassSerializerInterceptor, Get, Res, Req, UnauthorizedException } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { Response } from 'express';
-
+import { Cookies } from '@nestjsplus/cookies'
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
@@ -23,6 +23,17 @@ export class AuthController {
         })
 
         response.send(data)
+    }
+
+    @Post('/token')
+    async token(@Req() req: any) {
+        const token = req.cookies.refresh_token
+        try {
+            const data = await this.authService.accessToken(token)
+            return data
+        } catch (e) {
+            throw new UnauthorizedException('invalid token occured')
+        }
     }
 
     @UseGuards(JwtAuthGuard)
