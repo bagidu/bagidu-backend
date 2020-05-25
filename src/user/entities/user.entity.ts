@@ -23,6 +23,9 @@ export class User {
     @Exclude({ toPlainOnly: true })
     password: string
 
+    @Exclude()
+    tokens: []
+
     // get getPassword(): string {
     //     return this.password
     // }
