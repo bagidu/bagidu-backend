@@ -34,6 +34,12 @@ export class DonationController {
         return DonationResponse.fromList(data)
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get('/balance')
+    async balance(@Req() { user }: any) {
+        return this.donationService.balance(user.id)
+    }
+
     @Post(':username')
     async create(@Body() data: MakeDonationDto, @Param('username') username: string) {
         const user = await this.userService.findBy({ username })
