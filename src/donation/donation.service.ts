@@ -13,7 +13,7 @@ export class DonationService {
     ) { }
 
     async allByUser(userId: string): Promise<Donation[]> {
-        return await this.donationModel.find({ to: userId })
+        return await this.donationModel.find({ to: userId, status: 'SUCCESS' })
     }
 
     async create(data: MakeDonationDto, to: string): Promise<Donation> {

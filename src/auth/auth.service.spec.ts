@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt'
+import { User } from 'src/user/entities/user.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -42,8 +43,8 @@ describe('AuthService', () => {
       email: 'user@email.com',
       username: 'username',
       createdAt: new Date(),
-      password: '$2b$10$48CFoRAeC/yhu5DvRbB2cu.OHsMo1zMxhEXZ.7Jc5AhI0LEZhOakK'
-    }
+      password: '$2b$10$48CFoRAeC/yhu5DvRbB2cu.OHsMo1zMxhEXZ.7Jc5AhI0LEZhOakK',
+    } as User
 
     it('resolve user', () => {
       jest.spyOn(userServie, 'findBy').mockReturnValueOnce(Promise.resolve(user))
