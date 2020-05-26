@@ -39,10 +39,7 @@ export const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    tokens: {
-        type: [TokenSchema],
-        default: null
-    }
+    tokens: [TokenSchema]
 }, { versionKey: false })
 
 
