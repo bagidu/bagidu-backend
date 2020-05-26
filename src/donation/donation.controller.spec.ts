@@ -7,6 +7,7 @@ import { Donation } from './interfaces/donation.interface';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { XenditCallbackDto } from './dtos/xendit-callback.dto';
+import { DonationResponse } from './dtos/donation.response';
 
 describe('Donation Controller', () => {
   let controller: DonationController;
@@ -22,7 +23,8 @@ describe('Donation Controller', () => {
           useValue: {
             create: jest.fn(),
             detail: jest.fn(),
-            validate: jest.fn()
+            validate: jest.fn(),
+            allByUser: jest.fn()
           }
         },
         {
@@ -42,6 +44,24 @@ describe('Donation Controller', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  describe('get donation list', () => {
+    it('success', () => {
+      const mockList = [
+        {
+          id: 'abc'
+        },
+        {
+          id: 'def'
+        }
+      ] as unknown as Donation[]
+
+      const expectedResponse = DonationResponse.fromList(mockList)
+
+      jest.spyOn(donationService, 'allByUser').mockResolvedValue(mockList)
+      return expect(controller.all({ user: { id: 'xxx' } })).resolves.toEqual(expectedResponse)
+    })
+  })
 
   describe('make donation', () => {
     it('return response with qr', () => {

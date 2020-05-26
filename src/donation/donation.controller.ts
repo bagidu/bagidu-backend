@@ -1,10 +1,23 @@
-import { Controller, Get, UseGuards, Req, Body, Post, Param, NotFoundException, UseInterceptors, ClassSerializerInterceptor, BadRequestException } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    UseGuards,
+    Req,
+    Body,
+    Post,
+    Param,
+    NotFoundException,
+    UseInterceptors,
+    ClassSerializerInterceptor,
+    BadRequestException
+} from '@nestjs/common';
 import { DonationService } from './donation.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MakeDonationDto } from './dtos/make-donation.dto';
 import { UserService } from '../user/user.service';
 import { MakeDonationResponse } from './dtos/make-donation.response';
 import { XenditCallbackDto } from './dtos/xendit-callback.dto';
+import { DonationResponse } from './dtos/donation.response';
 
 @Controller('donation')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -14,11 +27,12 @@ export class DonationController {
         private readonly userService: UserService
     ) { }
 
-    // @UseGuards(JwtAuthGuard)
-    // @Get()
-    // async all(@Req() { user }: any) {
-    //     return this.donationService.allByUser(user.id)
-    // }
+    @UseGuards(JwtAuthGuard)
+    @Get('/')
+    async all(@Req() { user }: any) {
+        const data = await this.donationService.allByUser(user.id)
+        return DonationResponse.fromList(data)
+    }
 
     @Post(':username')
     async create(@Body() data: MakeDonationDto, @Param('username') username: string) {
