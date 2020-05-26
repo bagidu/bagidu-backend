@@ -7,7 +7,8 @@ export const TokenSchema = new mongoose.Schema({
         type: String,
         index: true,
         unique: true,
-        required: true
+        required: true,
+        sparse: true
     },
     type: {
         type: String,
@@ -38,7 +39,10 @@ export const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    tokens: [TokenSchema]
+    tokens: {
+        type: [TokenSchema],
+        default: null
+    }
 }, { versionKey: false })
 
 

@@ -8,6 +8,7 @@ import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { XenditCallbackDto } from './dtos/xendit-callback.dto';
 import { DonationResponse } from './dtos/donation.response';
+import { Balance } from './interfaces/balance.interface';
 
 describe('Donation Controller', () => {
   let controller: DonationController;
@@ -24,13 +25,14 @@ describe('Donation Controller', () => {
             create: jest.fn(),
             detail: jest.fn(),
             validate: jest.fn(),
-            allByUser: jest.fn()
+            allByUser: jest.fn(),
+            balance: jest.fn()
           }
         },
         {
           provide: UserService,
           useValue: {
-            findBy: jest.fn()
+            findBy: jest.fn(),
           }
         }
       ]
@@ -187,6 +189,20 @@ describe('Donation Controller', () => {
       })
 
       return expect(dto.qr_code.id).toEqual("qr_8182837te-87st-49ing-8696-1239bd4d759c")
+    })
+  })
+
+  describe('account balance', () => {
+    it('return total balance', () => {
+      const mockBalance = {
+        _id: 'xxx',
+        amount: 10000
+      } as Balance
+
+      jest.spyOn(donationService, 'balance').mockResolvedValue(mockBalance)
+      return expect(controller.balance({ user: { id: 'xxx' } }))
+        .resolves
+        .toEqual(mockBalance)
     })
   })
 });

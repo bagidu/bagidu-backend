@@ -5,6 +5,7 @@ import { XenditService } from '../xendit/xendit.service';
 import { Model } from 'mongoose';
 import { Donation } from './interfaces/donation.interface';
 import { MakeDonationDto } from './dtos/make-donation.dto';
+import { JwtStrategy } from 'src/auth/jwt.strategy';
 
 describe('DonationService', () => {
   let service: DonationService;
@@ -20,7 +21,8 @@ describe('DonationService', () => {
           useValue: {
             find: jest.fn(),
             create: jest.fn(),
-            findById: jest.fn()
+            findById: jest.fn(),
+            aggregate: jest.fn()
           }
         },
         {
@@ -112,6 +114,24 @@ describe('DonationService', () => {
     return expect(service.validate('xxx'))
       .resolves
       .toBeFalsy()
+  })
+
+  it('get balance: success', () => {
+    const mockResult = [{
+      _id: '5ecd5a390451fb8208239bb8',
+      amount: 10000
+    }]
+
+    jest.spyOn(model, 'aggregate').mockResolvedValue(mockResult)
+    return expect(service.balance('5ecd5a390451fb8208239bb8')).resolves.toEqual(mockResult[0])
+  })
+
+  it('get balance: null', () => {
+    jest.spyOn(model, 'aggregate').mockResolvedValue([])
+    return expect(service.balance('5ecd5a390451fb8208239bb8')).resolves.toEqual({
+      _id: '5ecd5a390451fb8208239bb8',
+      amount: 0
+    })
   })
 
 
