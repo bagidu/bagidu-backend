@@ -2,10 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DonationService } from './donation.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { XenditService } from '../xendit/xendit.service';
-import { Model } from 'mongoose';
+import { Model, DocumentQuery } from 'mongoose';
 import { Donation } from './interfaces/donation.interface';
 import { MakeDonationDto } from './dtos/make-donation.dto';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { Resolver } from 'dns';
 
 describe('DonationService', () => {
   let service: DonationService;
@@ -47,10 +48,18 @@ describe('DonationService', () => {
   describe('allByUser', () => {
     it('return all user data', () => {
       const result = [
-        { id: 'xxx' }
-      ] as Donation[]
-      jest.spyOn(model, 'find').mockResolvedValue(result)
-      return expect(service.allByUser('xxx')).toBeTruthy()
+        {
+          id: 'xxx',
+        }
+      ] as unknown as Donation[]
+
+      const find = {
+        sort: () => Promise.resolve(result)
+      } as unknown as DocumentQuery<Donation[], Donation, {}>
+
+
+      jest.spyOn(model, 'find').mockReturnValue(find)
+      return expect(service.allByUser('xxx')).resolves.toEqual(result)
     })
   })
 
