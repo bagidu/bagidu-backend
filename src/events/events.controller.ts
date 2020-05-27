@@ -7,7 +7,7 @@ export class EventsController {
 
     @Get('/:id')
     sendSocket(@Param('id') id: string) {
-        this.gateway.server.emit(`alert:${id}`, { message: 'hello alert' })
+        this.gateway.server.emit(`alert:${id}`, { message: 'hello alert', name: 'Sucipto', amount: 100000 })
         return "ok"
 
     }
