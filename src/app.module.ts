@@ -9,6 +9,7 @@ import { Connection } from 'mongoose';
 import { DonationModule } from './donation/donation.module';
 import { XenditModule } from './xendit/xendit.module';
 import { ScheduleModule } from '@nestjs/schedule'
+import { EventsModule } from './events/events.module'
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { ScheduleModule } from '@nestjs/schedule'
     UserModule,
     AuthModule,
     DonationModule,
-    XenditModule
+    XenditModule,
+    EventsModule
   ],
   controllers: [AppController],
   providers: [AppService],
