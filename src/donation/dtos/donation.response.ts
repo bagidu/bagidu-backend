@@ -1,5 +1,5 @@
-import { Donation } from "../interfaces/donation.interface"
-import { plainToClass, Expose, Type } from "class-transformer"
+import { Donation } from '../interfaces/donation.interface'
+import { plainToClass, Expose, Type } from 'class-transformer'
 
 export class DonationResponse {
     @Expose({ name: 'id' })

@@ -1,15 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { DonationService } from './donation.service';
-import { getModelToken } from '@nestjs/mongoose';
-import { XenditService } from '../xendit/xendit.service';
-import { Model, DocumentQuery } from 'mongoose';
-import { Donation } from './interfaces/donation.interface';
-import { MakeDonationDto } from './dtos/make-donation.dto';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { Resolver } from 'dns';
+import { Test, TestingModule } from '@nestjs/testing'
+import { DonationService } from './donation.service'
+import { getModelToken } from '@nestjs/mongoose'
+import { XenditService } from '../xendit/xendit.service'
+import { Model, DocumentQuery } from 'mongoose'
+import { Donation } from './interfaces/donation.interface'
+import { MakeDonationDto } from './dtos/make-donation.dto'
+import { JwtStrategy } from 'src/auth/jwt.strategy'
+import { Resolver } from 'dns'
 
 describe('DonationService', () => {
-  let service: DonationService;
+  let service: DonationService
   let model: Model<Donation>
   let xenditService: XenditService
 
@@ -34,16 +34,16 @@ describe('DonationService', () => {
           }
         }
       ],
-    }).compile();
+    }).compile()
 
-    service = module.get<DonationService>(DonationService);
+    service = module.get<DonationService>(DonationService)
     model = module.get(getModelToken('Donation'))
     xenditService = module.get(XenditService)
-  });
+  })
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+    expect(service).toBeDefined()
+  })
 
   describe('allByUser', () => {
     it('return all user data', () => {
@@ -144,4 +144,4 @@ describe('DonationService', () => {
   })
 
 
-});
+})

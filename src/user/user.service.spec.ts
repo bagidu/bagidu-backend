@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
-import { getModelToken } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User } from './interfaces/user.interface';
+import { Test, TestingModule } from '@nestjs/testing'
+import { UserService } from './user.service'
+import { getModelToken } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import { User } from './interfaces/user.interface'
 import { User as UserEntity } from './entities/user.entity'
 
 describe('UserService', () => {
-  let service: UserService;
+  let service: UserService
   let model: Model<User>
 
   class MockModel {
@@ -26,15 +26,15 @@ describe('UserService', () => {
           useValue: MockModel
         }
       ],
-    }).compile();
+    }).compile()
 
-    service = module.get<UserService>(UserService);
+    service = module.get<UserService>(UserService)
     model = module.get(getModelToken('User'))
-  });
+  })
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+    expect(service).toBeDefined()
+  })
 
   it('create user', () => {
     const dto = { name: 'name', email: 'email', username: 'username', password: 'pass', createdAt: null }
@@ -92,4 +92,4 @@ describe('UserService', () => {
   // it('save token', () => {
   //   service.saveToken()
   // })
-});
+})

@@ -1,8 +1,8 @@
-import { Controller, Post, UseGuards, UseInterceptors, ClassSerializerInterceptor, Get, Res, Req, UnauthorizedException } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { Response } from 'express';
+import { Controller, Post, UseGuards, UseInterceptors, ClassSerializerInterceptor, Get, Res, Req, UnauthorizedException } from '@nestjs/common'
+import { LocalAuthGuard } from './local-auth.guard'
+import { AuthService } from './auth.service'
+import { JwtAuthGuard } from './jwt-auth.guard'
+import { Response } from 'express'
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {

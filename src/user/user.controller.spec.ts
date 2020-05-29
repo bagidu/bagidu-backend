@@ -1,13 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { User } from './entities/user.entity';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing'
+import { UserController } from './user.controller'
+import { UserService } from './user.service'
+import { CreateUserDto } from './dtos/create-user.dto'
+import { User } from './entities/user.entity'
+import { BadRequestException, NotFoundException } from '@nestjs/common'
 
 describe('User Controller', () => {
-  let controller: UserController;
-  let service: UserService;
+  let controller: UserController
+  let service: UserService
   let module: TestingModule
 
   beforeEach(async () => {
@@ -23,23 +23,23 @@ describe('User Controller', () => {
           }
         }
       ]
-    }).compile();
+    }).compile()
 
-    controller = module.get<UserController>(UserController);
+    controller = module.get<UserController>(UserController)
     service = module.get<UserService>(UserService)
-  });
+  })
 
   afterEach(() => {
     module.close()
   })
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    expect(controller).toBeDefined()
+  })
 
   describe('create user', () => {
     const moana = new CreateUserDto()
-    moana.name = "Moana"
+    moana.name = 'Moana'
     moana.username = 'moana'
     moana.email = 'moana@motunui.island'
     moana.password = 'heihei'
@@ -47,7 +47,7 @@ describe('User Controller', () => {
     it('success create user', async () => {
       jest.spyOn(service, 'create').mockImplementation(() => {
         const user = new User()
-        user.name = "Moana"
+        user.name = 'Moana'
         user.username = 'moana'
         user.email = 'moana@motunui.island'
         user.password = 'heihei'
@@ -58,7 +58,7 @@ describe('User Controller', () => {
 
       return expect(await controller.create(moana))
         .toEqual(expect.objectContaining({
-          name: "Moana",
+          name: 'Moana',
           username: 'moana',
           email: 'moana@motunui.island'
         }))
@@ -104,7 +104,7 @@ describe('User Controller', () => {
   })
 
   describe('user detail', () => {
-    it("get user by id", () => {
+    it('get user by id', () => {
       const user = new User()
       user.name = 'Sucipto'
       user.username = 'sucipto'
@@ -124,4 +124,4 @@ describe('User Controller', () => {
     })
   })
 
-});
+})

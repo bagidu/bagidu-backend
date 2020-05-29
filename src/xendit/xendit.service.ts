@@ -1,5 +1,5 @@
-import { Injectable, HttpService } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, HttpService } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { map } from 'rxjs/operators'
 
 @Injectable()

@@ -10,14 +10,14 @@ import {
     UseInterceptors,
     ClassSerializerInterceptor,
     BadRequestException
-} from '@nestjs/common';
-import { DonationService } from './donation.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { MakeDonationDto } from './dtos/make-donation.dto';
-import { UserService } from '../user/user.service';
-import { MakeDonationResponse } from './dtos/make-donation.response';
-import { XenditCallbackDto } from './dtos/xendit-callback.dto';
-import { DonationResponse } from './dtos/donation.response';
+} from '@nestjs/common'
+import { DonationService } from './donation.service'
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'
+import { MakeDonationDto } from './dtos/make-donation.dto'
+import { UserService } from '../user/user.service'
+import { MakeDonationResponse } from './dtos/make-donation.response'
+import { XenditCallbackDto } from './dtos/xendit-callback.dto'
+import { DonationResponse } from './dtos/donation.response'
 
 @Controller('donation')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -76,7 +76,7 @@ export class DonationController {
         if (data.status === 'COMPLETED' && valid) {
             donation.status = 'SUCCESS'
             await donation.save()
-            return "OK"
+            return 'OK'
         }
 
         throw new BadRequestException('Invalid payment')

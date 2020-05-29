@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { HttpModule, HttpService } from '@nestjs/common';
-import { of } from 'rxjs';
+import { Test, TestingModule } from '@nestjs/testing'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { HttpModule, HttpService } from '@nestjs/common'
+import { of } from 'rxjs'
 import { AxiosResponse } from 'axios'
 
 describe('AppController', () => {
-  let appController: AppController;
+  let appController: AppController
   let service: AppService
   let http: HttpService
 
@@ -15,17 +15,17 @@ describe('AppController', () => {
       imports: [HttpModule],
       controllers: [AppController],
       providers: [AppService],
-    }).compile();
+    }).compile()
 
-    appController = app.get<AppController>(AppController);
+    appController = app.get<AppController>(AppController)
     service = app.get(AppService)
     http = app.get(HttpService)
-  });
+  })
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Diam itu emas 🤪');
-    });
+      expect(appController.getHello()).toBe('Diam itu emas 🤪')
+    })
 
     it('cron: ping called', () => {
       jest.spyOn(http, 'get').mockImplementation(() => {
@@ -42,5 +42,5 @@ describe('AppController', () => {
 
       expect(http.get).toBeCalledTimes(1)
     })
-  });
-});
+  })
+})

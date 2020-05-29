@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { UserService } from '../src/user/user.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { CreateUserDto } from '../src/user/dtos/create-user.dto';
-import { AuthService } from '../src/auth/auth.service';
-import { User } from 'src/user/entities/user.entity';
+import { Test, TestingModule } from '@nestjs/testing'
+import { INestApplication } from '@nestjs/common'
+import * as request from 'supertest'
+import { UserService } from '../src/user/user.service'
+import { MongooseModule } from '@nestjs/mongoose'
+import { CreateUserDto } from '../src/user/dtos/create-user.dto'
+import { AuthService } from '../src/auth/auth.service'
+import { User } from 'src/user/entities/user.entity'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import { AuthModule } from '../src/auth/auth.module';
-import { UserModule } from '../src/user/user.module';
+import { AuthModule } from '../src/auth/auth.module'
+import { UserModule } from '../src/user/user.module'
 import * as CookieParser from 'cookie-parser'
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication;
+  let app: INestApplication
   let userService: UserService
   let authService: AuthService
   let mongod: MongoMemoryServer
@@ -34,17 +34,17 @@ describe('AppController (e2e)', () => {
         AuthModule,
         UserModule
       ],
-    }).compile();
+    }).compile()
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication()
 
     userService = moduleFixture.get(UserService)
     authService = moduleFixture.get(AuthService)
 
     app.use(CookieParser())
 
-    await app.init();
-  });
+    await app.init()
+  })
 
   afterEach(async () => {
     await app.close()
@@ -116,7 +116,7 @@ describe('AppController (e2e)', () => {
     it('invalid refresh token return unauthorized', () => {
       return request(app.getHttpServer())
         .post('/auth/token')
-        .set('Cookie', [`refresh_token=invalidtoken`])
+        .set('Cookie', ['refresh_token=invalidtoken'])
         .expect(401)
     })
 
@@ -173,4 +173,4 @@ describe('AppController (e2e)', () => {
     })
   })
 
-});
+})
