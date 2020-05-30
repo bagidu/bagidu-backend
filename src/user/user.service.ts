@@ -44,6 +44,17 @@ export class UserService {
             token, type
         } as Token)
 
-        user.save()
+        return user.save()
+    }
+
+    async removeToken(uid: string, token: string, type: string) {
+        const user = await this.userModel.findById(uid)
+        const deletedToken = user.tokens.find(f => f.token === token)
+
+        if (deletedToken) {
+            deletedToken.remove()
+        }
+
+        return user.save()
     }
 }

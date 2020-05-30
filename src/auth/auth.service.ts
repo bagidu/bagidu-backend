@@ -68,4 +68,8 @@ export class AuthService {
             expired: exp.getTime()
         }
     }
+
+    async logout(id: string, token: string) {
+        return this.userService.removeToken(id, token, 'refresh')
+    }
 }

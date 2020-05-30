@@ -11,6 +11,7 @@ import { AuthModule } from '../src/auth/auth.module'
 import { UserModule } from '../src/user/user.module'
 import * as CookieParser from 'cookie-parser'
 import { AppModule } from '../src/app.module'
+import { createTestApp } from './utils'
 
 describe('AppController (e2e)', () => {
   let app: INestApplication
@@ -19,21 +20,9 @@ describe('AppController (e2e)', () => {
   let mongod: MongoMemoryServer
 
   beforeEach(async () => {
-    mongod = new MongoMemoryServer()
-    const mongoURI = await mongod.getUri()
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule
-      ],
-    })
-      .overrideProvider('MongooseModuleOptions')
-      .useValue({
-        uri: mongoURI,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-      })
-      .compile()
+    const testApp = await createTestApp()
+    mongod = testApp.mongo
+    const moduleFixture = await testApp.module.compile()
 
     app = moduleFixture.createNestApplication()
 
@@ -56,7 +45,7 @@ describe('AppController (e2e)', () => {
     user.password = 'secret'
     user.username = 'sucipto'
 
-    it('/login invalid user', async () => {
+    it('POST /login invalid user', async () => {
       return request(app.getHttpServer())
         .post('/auth/login')
         .send({ username: 'invalid', password: 'invalid' })
@@ -64,7 +53,7 @@ describe('AppController (e2e)', () => {
 
     })
 
-    it('/login successfully', async done => {
+    it('POST /login successfully', async done => {
       const sucipto = await userService.create(user)
       expect(sucipto).toBeDefined()
 
@@ -80,14 +69,14 @@ describe('AppController (e2e)', () => {
         })
     })
 
-    it('/login unauthorized', async () => {
+    it('POST /login unauthorized', async () => {
       return request(app.getHttpServer())
         .post('/auth/login')
         .send({ username: 'xx' })
         .expect(401)
     })
 
-    it('get profile using token', async () => {
+    it('GET /profile using token', async () => {
       const sucipto = await userService.create(user)
       expect(sucipto).toBeDefined()
       const auth = await authService.login(sucipto)
@@ -97,7 +86,7 @@ describe('AppController (e2e)', () => {
         .expect(200)
     })
 
-    it('get refresh token using cookie', async done => {
+    it('POST /token refresh token using cookie', async done => {
 
       const u: User = await userService.create(user)
       const auth = await authService.login(u)
@@ -112,18 +101,33 @@ describe('AppController (e2e)', () => {
         })
     })
 
-    it('invalid refresh token return unauthorized', () => {
+    it('POST /token invalid refresh token return unauthorized', () => {
       return request(app.getHttpServer())
         .post('/auth/token')
         .set('Cookie', ['refresh_token=invalidtoken'])
         .expect(401)
     })
 
-    it('empty refresh token return unauthorized', () => {
-
+    it('POST /token empty refresh token return unauthorized', () => {
       return request(app.getHttpServer())
         .post('/auth/token')
         .expect(401)
+    })
+
+    it('POST /logout return delete refresh token cookie', async done => {
+      const u: User = await userService.create(user)
+      const auth = await authService.login(u)
+
+      return request(app.getHttpServer())
+        .post('/auth/logout')
+        .set('Authorization', 'Bearer ' + auth.access_token)
+        .expect(200)
+        .then(resp => {
+          expect(resp.header['set-cookie'].length).toBe(1)
+          expect(resp.header['set-cookie'][0]).toEqual('refresh_token=; Path=/; HttpOnly')
+          done()
+        })
+        .finally(done)
     })
   })
 
