@@ -10,6 +10,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server'
 import { AuthModule } from '../src/auth/auth.module'
 import { UserModule } from '../src/user/user.module'
 import * as CookieParser from 'cookie-parser'
+import { AppModule } from '../src/app.module'
 
 describe('AppController (e2e)', () => {
   let app: INestApplication
@@ -19,22 +20,20 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     mongod = new MongoMemoryServer()
+    const mongoURI = await mongod.getUri()
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRootAsync({
-          useFactory: async () => {
-            return {
-              uri: await mongod.getUri(),
-              useNewUrlParser: true,
-              useUnifiedTopology: true,
-              useCreateIndex: true,
-            }
-          }
-        }),
-        AuthModule,
-        UserModule
+        AppModule
       ],
-    }).compile()
+    })
+      .overrideProvider('MongooseModuleOptions')
+      .useValue({
+        uri: mongoURI,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+      })
+      .compile()
 
     app = moduleFixture.createNestApplication()
 
