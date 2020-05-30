@@ -1,5 +1,5 @@
-import { Expose, Exclude, Type } from "class-transformer";
-import { User } from "../../user/entities/user.entity";
+import { Expose, Exclude, Type } from 'class-transformer'
+import { User } from '../../user/entities/user.entity'
 
 export class Donation {
     @Exclude({ toPlainOnly: true })

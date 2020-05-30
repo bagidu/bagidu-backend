@@ -1,28 +1,28 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { XenditService } from './xendit.service';
-import { ConfigModule } from '@nestjs/config';
-import { HttpService, HttpModule } from '@nestjs/common';
-import { of } from 'rxjs';
+import { Test, TestingModule } from '@nestjs/testing'
+import { XenditService } from './xendit.service'
+import { ConfigModule } from '@nestjs/config'
+import { HttpService, HttpModule } from '@nestjs/common'
+import { of } from 'rxjs'
 import { AxiosResponse } from 'axios'
 
 describe('XenditService', () => {
-  let service: XenditService;
+  let service: XenditService
   let http: HttpService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule, HttpModule],
       providers: [XenditService],
-    }).compile();
+    }).compile()
 
-    service = module.get<XenditService>(XenditService);
+    service = module.get<XenditService>(XenditService)
     http = module.get(HttpService)
-  });
+  })
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(service).toBeDefined()
     expect(http).toBeDefined()
-  });
+  })
 
   it('create qr', () => {
     jest.spyOn(http, 'post').mockImplementation(() => {
@@ -73,4 +73,4 @@ describe('XenditService', () => {
   //     .rejects
   //     .toThrowError()
   // })
-});
+})

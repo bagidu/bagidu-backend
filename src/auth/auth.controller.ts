@@ -1,8 +1,8 @@
-import { Controller, Post, UseGuards, UseInterceptors, ClassSerializerInterceptor, Get, Res, Req, UnauthorizedException } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { Response } from 'express';
+import { Controller, Post, UseGuards, UseInterceptors, ClassSerializerInterceptor, Get, Res, Req, UnauthorizedException, HttpCode } from '@nestjs/common'
+import { LocalAuthGuard } from './local-auth.guard'
+import { AuthService } from './auth.service'
+import { JwtAuthGuard } from './jwt-auth.guard'
+import { Response } from 'express'
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
@@ -39,5 +39,21 @@ export class AuthController {
     @Get('/profile')
     async profile(@Req() req: any) {
         return req.user
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @HttpCode(200)
+    @Post('/logout')
+    async logout(@Req() req: any, @Res() res: Response) {
+
+        const token = req.cookies.refresh_token
+        // Delete Token
+        await this.authService.logout(req.user.id, token)
+        res.cookie('refresh_token', '', {
+            httpOnly: true,
+            // domain: 'localhost'
+        })
+
+        res.send({ message: 'Logged out' })
     }
 }

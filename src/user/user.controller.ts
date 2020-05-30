@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException, UseInterceptors, ClassSerializerInterceptor, Req, UseGuards } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException, UseInterceptors, ClassSerializerInterceptor, Req, UseGuards } from '@nestjs/common'
+import { UserService } from './user.service'
+import { CreateUserDto } from './dtos/create-user.dto'
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)

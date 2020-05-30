@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId, mongo } from 'mongoose';
-import { User } from './interfaces/user.interface';
-import { CreateUserDto } from './dtos/create-user.dto';
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model, isValidObjectId, mongo } from 'mongoose'
+import { User } from './interfaces/user.interface'
+import { CreateUserDto } from './dtos/create-user.dto'
 import { User as UserEntity } from './entities/user.entity'
-import { plainToClass } from 'class-transformer';
-import { Token } from './interfaces/token.interface';
+import { plainToClass } from 'class-transformer'
+import { Token } from './interfaces/token.interface'
 
 @Injectable()
 export class UserService {
@@ -44,6 +44,17 @@ export class UserService {
             token, type
         } as Token)
 
-        user.save()
+        return user.save()
+    }
+
+    async removeToken(uid: string, token: string, type: string) {
+        const user = await this.userModel.findById(uid)
+        const deletedToken = user.tokens.find(f => f.token === token)
+
+        if (deletedToken) {
+            deletedToken.remove()
+        }
+
+        return user.save()
     }
 }

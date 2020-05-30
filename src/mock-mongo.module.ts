@@ -1,5 +1,5 @@
 import { MongooseModule } from '@nestjs/mongoose'
-import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 @Module({
     imports: [

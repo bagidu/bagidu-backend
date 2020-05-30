@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing'
+import { AuthService } from './auth.service'
+import { UserService } from '../user/user.service'
+import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/user/entities/user.entity'
 
 describe('AuthService', () => {
-  let service: AuthService;
+  let service: AuthService
   let userServie: UserService
 
   beforeEach(async () => {
@@ -25,15 +25,15 @@ describe('AuthService', () => {
         }
 
       ],
-    }).compile();
+    }).compile()
 
-    service = module.get<AuthService>(AuthService);
+    service = module.get<AuthService>(AuthService)
     userServie = module.get(UserService)
-  });
+  })
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+    expect(service).toBeDefined()
+  })
 
   describe('validate user', () => {
     const user = {
@@ -67,4 +67,4 @@ describe('AuthService', () => {
         .toBeNull()
     })
   })
-});
+})

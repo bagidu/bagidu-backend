@@ -1,13 +1,13 @@
-import { Injectable, HttpService } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
-import { map } from 'rxjs/operators';
+import { Injectable, HttpService } from '@nestjs/common'
+import { Cron } from '@nestjs/schedule'
+import { map } from 'rxjs/operators'
 
 @Injectable()
 export class AppService {
   constructor(private http: HttpService) { }
 
   getHello(): string {
-    return 'Diam itu emas 🤪';
+    return 'Diam itu emas 🤪'
   }
 
   @Cron('0 */10 * * * *')

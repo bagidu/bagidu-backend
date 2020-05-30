@@ -1,16 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
-import { PassportModule } from '@nestjs/passport';
-import { Response } from 'express';
+import { Test, TestingModule } from '@nestjs/testing'
+import { AuthController } from './auth.controller'
+import { UserService } from '../user/user.service'
+import { JwtService } from '@nestjs/jwt'
+import { AuthService } from './auth.service'
+import { PassportModule } from '@nestjs/passport'
+import { Response } from 'express'
 
 describe('Auth Controller', () => {
-  let controller: AuthController;
+  let controller: AuthController
   // let authService: AuthService;
   // let userService: UserService;
-  let jwtService: JwtService;
+  let jwtService: JwtService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,17 +32,17 @@ describe('Auth Controller', () => {
         }
       ]
     })
-      .compile();
+      .compile()
 
-    controller = module.get<AuthController>(AuthController);
+    controller = module.get<AuthController>(AuthController)
     // authService = module.get(AuthService)
     // userService = module.get(UserService)
     jwtService = module.get(JwtService)
-  });
+  })
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    expect(controller).toBeDefined()
+  })
 
   it('/login able to login and get token', async () => {
     const res = {
@@ -66,4 +66,4 @@ describe('Auth Controller', () => {
       .toEqual({ username: 'mock' })
       .catch(e => expect(e).toBeNull())
   })
-});
+})

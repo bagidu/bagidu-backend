@@ -1,13 +1,13 @@
-import { Module, HttpModule } from '@nestjs/common';
+import { Module, HttpModule } from '@nestjs/common'
 import { MongooseModule, InjectConnection } from '@nestjs/mongoose'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { Connection } from 'mongoose';
-import { DonationModule } from './donation/donation.module';
-import { XenditModule } from './xendit/xendit.module';
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { UserModule } from './user/user.module'
+import { AuthModule } from './auth/auth.module'
+import { Connection } from 'mongoose'
+import { DonationModule } from './donation/donation.module'
+import { XenditModule } from './xendit/xendit.module'
 import { ScheduleModule } from '@nestjs/schedule'
 import { EventsModule } from './events/events.module'
 

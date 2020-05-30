@@ -1,17 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { DonationController } from './donation.controller';
-import { DonationService } from './donation.service';
-import { UserService } from '../user/user.service';
-import { User } from '../user/entities/user.entity';
-import { Donation } from './interfaces/donation.interface';
-import { NotFoundException, BadRequestException } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
-import { XenditCallbackDto } from './dtos/xendit-callback.dto';
-import { DonationResponse } from './dtos/donation.response';
-import { Balance } from './interfaces/balance.interface';
+import { Test, TestingModule } from '@nestjs/testing'
+import { DonationController } from './donation.controller'
+import { DonationService } from './donation.service'
+import { UserService } from '../user/user.service'
+import { User } from '../user/entities/user.entity'
+import { Donation } from './interfaces/donation.interface'
+import { NotFoundException, BadRequestException } from '@nestjs/common'
+import { plainToClass } from 'class-transformer'
+import { XenditCallbackDto } from './dtos/xendit-callback.dto'
+import { DonationResponse } from './dtos/donation.response'
+import { Balance } from './interfaces/balance.interface'
 
 describe('Donation Controller', () => {
-  let controller: DonationController;
+  let controller: DonationController
   let userService: UserService
   let donationService: DonationService
 
@@ -36,16 +36,16 @@ describe('Donation Controller', () => {
           }
         }
       ]
-    }).compile();
+    }).compile()
 
-    controller = module.get<DonationController>(DonationController);
+    controller = module.get<DonationController>(DonationController)
     userService = module.get(UserService)
     donationService = module.get(DonationService)
-  });
+  })
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    expect(controller).toBeDefined()
+  })
 
   describe('get donation list', () => {
     it('success', () => {
@@ -150,7 +150,7 @@ describe('Donation Controller', () => {
       } as XenditCallbackDto
 
       return expect(controller.callback('xxx', dto)).resolves
-        .toEqual("OK")
+        .toEqual('OK')
 
     })
 
@@ -175,20 +175,20 @@ describe('Donation Controller', () => {
   describe('dto', () => {
     it('xendit callback dto:parsed', () => {
       const dto = plainToClass(XenditCallbackDto, {
-        "event": "qr.payment",
-        "id": "qrpy_8182837te-87st-49ing-8696-1239bd4d759c",
-        "amount": 1500,
-        "created": "2020-01-08T18:18:18.857Z",
-        "qr_code": {
-          "id": "qr_8182837te-87st-49ing-8696-1239bd4d759c",
-          "external_id": "testing_id_123",
-          "qr_string": "0002010102##########CO.XENDIT.WWW011893600#######14220002152#####414220010303TTT####015CO.XENDIT.WWW02180000000000000000000TTT52045######ID5911XenditQRIS6007Jakarta6105121606##########3k1mOnF73h11111111#3k1mOnF73h6v53033605401163040BDB",
-          "type": "DYNAMIC"
+        'event': 'qr.payment',
+        'id': 'qrpy_8182837te-87st-49ing-8696-1239bd4d759c',
+        'amount': 1500,
+        'created': '2020-01-08T18:18:18.857Z',
+        'qr_code': {
+          'id': 'qr_8182837te-87st-49ing-8696-1239bd4d759c',
+          'external_id': 'testing_id_123',
+          'qr_string': '0002010102##########CO.XENDIT.WWW011893600#######14220002152#####414220010303TTT####015CO.XENDIT.WWW02180000000000000000000TTT52045######ID5911XenditQRIS6007Jakarta6105121606##########3k1mOnF73h11111111#3k1mOnF73h6v53033605401163040BDB',
+          'type': 'DYNAMIC'
         },
-        "status": "COMPLETED"
+        'status': 'COMPLETED'
       })
 
-      return expect(dto.qr_code.id).toEqual("qr_8182837te-87st-49ing-8696-1239bd4d759c")
+      return expect(dto.qr_code.id).toEqual('qr_8182837te-87st-49ing-8696-1239bd4d759c')
     })
   })
 
@@ -205,4 +205,4 @@ describe('Donation Controller', () => {
         .toEqual(mockBalance)
     })
   })
-});
+})
