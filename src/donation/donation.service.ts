@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Donation } from './interfaces/donation.interface'
-import { Model, isValidObjectId } from 'mongoose'
+import { Model } from 'mongoose'
 import { MakeDonationDto } from './dtos/make-donation.dto'
 import { XenditService } from '../xendit/xendit.service'
-import { DonationResponse } from './dtos/donation.response'
 import { Balance } from './interfaces/balance.interface'
 import { Types } from 'mongoose'
 
@@ -42,7 +41,6 @@ export class DonationService {
                 },
             },
             {
-
                 $group: {
                     _id: '$to',
                     amount: {

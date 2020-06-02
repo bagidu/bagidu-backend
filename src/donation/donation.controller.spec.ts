@@ -71,12 +71,18 @@ describe('Donation Controller', () => {
         name: 'Sucipto',
         amount: 1500,
         message: 'Buat sahur',
+        payment_method: 'QRIS'
       }
 
       const mockDoc = {
         ...dto,
         id: 'xxx',
         qr: 'xxxxxx',
+        qris: {
+          qr: 'xxxxxx',
+          signature: 'signaturexxx'
+        },
+        payment_method: 'QRIS',
         createdAt: new Date(),
         to: 'lubna',
         status: 'PENDING',

@@ -15,6 +15,8 @@ export class MakeDonationResponse {
     qr: string
     @Expose()
     status: string
+    @Expose()
+    payment_method: string
 
     static fromModel(donation: Donation) {
         return plainToClass(MakeDonationResponse, donation, { strategy: 'excludeAll' })

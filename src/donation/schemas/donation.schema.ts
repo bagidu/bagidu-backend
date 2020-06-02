@@ -22,12 +22,21 @@ export const DonationSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum:['SUCCESS','PENDING','FAILED'],
-            default:'PENDING'
+            enum: ['SUCCESS', 'PENDING', 'FAILED'],
+            default: 'PENDING'
         },
-        qr: {
+        qr: { // deprecated, remove soon
             type: String,
             required: false
+        },
+        qris: {
+            qr: String,
+            signature: String
+        },
+        payment_method: {
+            type: String,
+            enum: ['QRIS', 'OVO', 'LINKAJA', 'GOPAY', 'DANA', 'PAYPAL', 'BANK'],
+            default: 'QRIS'
         }
     },
     {
