@@ -16,12 +16,15 @@ import { EventsModule } from './events/events.module'
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI'),
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true
-      }),
+
+      useFactory:
+        /* istanbul ignore next */
+        async (configService: ConfigService) => ({
+          uri: configService.get<string>('MONGODB_URI'),
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useCreateIndex: true
+        }),
       inject: [ConfigService],
     }),
     ScheduleModule.forRoot(),

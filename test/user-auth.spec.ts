@@ -121,6 +121,23 @@ describe('AppController (e2e)', () => {
       return request(app.getHttpServer())
         .post('/auth/logout')
         .set('Authorization', 'Bearer ' + auth.access_token)
+        .set('Cookie', [`refresh_token=${auth.refresh_token}`])
+        .expect(200)
+        .then(resp => {
+          expect(resp.header['set-cookie'].length).toBe(1)
+          expect(resp.header['set-cookie'][0]).toEqual('refresh_token=; Path=/; HttpOnly')
+          done()
+        })
+        .finally(done)
+    })
+
+    it('POST /logout without cookie', async done => {
+      const u: User = await userService.create(user)
+      const auth = await authService.login(u)
+
+      return request(app.getHttpServer())
+        .post('/auth/logout')
+        .set('Authorization', 'Bearer ' + auth.access_token)
         .expect(200)
         .then(resp => {
           expect(resp.header['set-cookie'].length).toBe(1)
