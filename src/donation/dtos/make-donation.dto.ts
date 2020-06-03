@@ -7,4 +7,5 @@ export class MakeDonationDto {
     @Min(1500)
     amount: number
     message: string
+    payment_method?: string
 }

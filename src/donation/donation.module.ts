@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { DonationSchema } from './schemas/donation.schema'
 import { UserModule } from '../user/user.module'
 import { XenditModule } from '../xendit/xendit.module'
+import { EventsModule } from '../events/events.module'
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { XenditModule } from '../xendit/xendit.module'
       { name: 'Donation', schema: DonationSchema }
     ]),
     UserModule,
-    XenditModule
+    XenditModule,
+    EventsModule
   ],
   controllers: [DonationController],
   providers: [DonationService]
