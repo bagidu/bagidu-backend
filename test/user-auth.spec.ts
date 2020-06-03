@@ -1,16 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
 import { UserService } from '../src/user/user.service'
-import { MongooseModule } from '@nestjs/mongoose'
 import { CreateUserDto } from '../src/user/dtos/create-user.dto'
 import { AuthService } from '../src/auth/auth.service'
 import { User } from 'src/user/entities/user.entity'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import { AuthModule } from '../src/auth/auth.module'
-import { UserModule } from '../src/user/user.module'
 import * as CookieParser from 'cookie-parser'
-import { AppModule } from '../src/app.module'
 import { createTestApp } from './utils'
 
 describe('AppController (e2e)', () => {
