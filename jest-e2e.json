@@ -6,14 +6,16 @@
   ],
   "rootDir": ".",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": ".test.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "coverageDirectory": "./coverage-e2e",
   "collectCoverageFrom": [
-    "**/src/**/*.{js,ts}",
+    "**/src/**/*.controller.{js,ts}",
+    "**/src/**/*.service.{js,ts}",
     "!**/src/**/*.spec.{js,ts}",
+    "!**/src/**/*.test.{js,ts}",
     "!**/node_modules/**",
     "!**/dist/**"
   ],
