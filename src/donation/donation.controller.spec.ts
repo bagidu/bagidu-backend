@@ -9,6 +9,7 @@ import { plainToClass } from 'class-transformer'
 import { XenditCallbackDto } from './dtos/xendit-callback.dto'
 import { DonationResponse } from './dtos/donation.response'
 import { Balance } from './interfaces/balance.interface'
+import { EventsGateway } from '../events/events.gateway'
 
 describe('Donation Controller', () => {
   let controller: DonationController
@@ -33,6 +34,11 @@ describe('Donation Controller', () => {
           provide: UserService,
           useValue: {
             findBy: jest.fn(),
+          }
+        }, {
+          provide: EventsGateway,
+          useValue: {
+            notify: jest.fn()
           }
         }
       ]

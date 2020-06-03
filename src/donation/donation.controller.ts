@@ -18,13 +18,15 @@ import { UserService } from '../user/user.service'
 import { MakeDonationResponse } from './dtos/make-donation.response'
 import { XenditCallbackDto } from './dtos/xendit-callback.dto'
 import { DonationResponse } from './dtos/donation.response'
+import { EventsGateway } from '../events/events.gateway'
 
 @Controller('donation')
 @UseInterceptors(ClassSerializerInterceptor)
 export class DonationController {
     constructor(
         private readonly donationService: DonationService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly event: EventsGateway
     ) { }
 
     @UseGuards(JwtAuthGuard)
@@ -76,6 +78,14 @@ export class DonationController {
         if (data.status === 'COMPLETED' && valid) {
             donation.status = 'SUCCESS'
             await donation.save()
+
+            // Emit notification
+            // console.log('notify ke alert:' + donation.to)
+            this.event.notify(`alert:${donation.to}`, {
+                message: donation.message,
+                amount: donation.amount,
+                name: donation.name
+            })
             return 'OK'
         }
 
