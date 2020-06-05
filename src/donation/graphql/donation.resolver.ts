@@ -1,12 +1,11 @@
 import { Resolver, Query } from '@nestjs/graphql'
 import { Donation } from './donation.model'
 import { DonationService } from '../donation.service'
-import { UserService } from 'src/user/user.service'
-import { EventsGateway } from 'src/events/events.gateway'
-import { GqlUser } from 'src/auth/user.decorator'
-import { DonationResponse } from '../dtos/donation.response'
+import { UserService } from '../../user/user.service'
+import { EventsGateway } from '../..//events/events.gateway'
+import { GqlUser } from '../../auth/user.decorator'
 import { UseGuards } from '@nestjs/common'
-import { JwtGqlGuard } from 'src/auth/jwt-auth.guard'
+import { JwtGqlGuard } from '../../auth/jwt-auth.guard'
 
 @Resolver(of => Donation)
 export class DonationResolver {
