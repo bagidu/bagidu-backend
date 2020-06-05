@@ -10,7 +10,8 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {},
-    "incremental": true
+    "incremental": true,
+    "allowSyntheticDefaultImports": true
   },
   "exclude": [
     "node_modules",

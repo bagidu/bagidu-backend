@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigService, ConfigModule } from '@nestjs/config'
 import { JwtStrategy } from './jwt.strategy'
+import { AuthResolver } from './graphql/auth.resolver'
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { JwtStrategy } from './jwt.strategy'
       inject: [ConfigService]
     })
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, ConfigService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, ConfigService, AuthResolver],
   controllers: [AuthController],
   exports: [JwtModule]
 })

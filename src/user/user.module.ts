@@ -4,6 +4,7 @@ import { UserService } from './user.service'
 import { MongooseModule } from '@nestjs/mongoose'
 import { UserSchema } from './schemas/user.schema'
 import { EventsModule } from 'src/events/events.module'
+import { UserResolver } from './graphql/user.resolver'
 
 @Module({
     imports: [
@@ -12,7 +13,7 @@ import { EventsModule } from 'src/events/events.module'
         ])
     ],
     controllers: [UserController],
-    providers: [UserService],
+    providers: [UserService, UserResolver],
     exports: [UserService]
 })
 export class UserModule { }
