@@ -13,7 +13,6 @@
   "coverageDirectory": "./coverage-e2e",
   "collectCoverageFrom": [
     "**/src/**/*.controller.{js,ts}",
-    "**/src/**/*.service.{js,ts}",
     "!**/src/**/*.spec.{js,ts}",
     "!**/src/**/*.test.{js,ts}",
     "!**/node_modules/**",
