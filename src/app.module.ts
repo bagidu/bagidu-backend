@@ -17,6 +17,9 @@ import { GraphQLModule } from '@nestjs/graphql'
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      debug: process.env.NODE_ENV !== 'production',
+      introspection: process.env.NODE_ENV !== 'production',
+      playground: process.env.NODE_ENV !== 'production',
       context: ({ req, res }) => ({ req, res })
     }),
     MongooseModule.forRootAsync({
