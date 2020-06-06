@@ -24,5 +24,10 @@ export class Donation {
     qris?: QrisField
     @Field()
     payment_method: string
+}
 
+@ObjectType()
+export class Balance {
+    @Field(type => Int)
+    amount: number
 }
