@@ -24,6 +24,8 @@ export class Donation {
     qris?: QrisField
     @Field()
     payment_method: string
+    @Field(type => Date)
+    createdAt: Date
 }
 
 @ObjectType()

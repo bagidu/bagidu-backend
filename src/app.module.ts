@@ -20,7 +20,10 @@ import { GraphQLModule } from '@nestjs/graphql'
       debug: process.env.NODE_ENV !== 'production',
       introspection: process.env.NODE_ENV !== 'production',
       playground: process.env.NODE_ENV !== 'production',
-      context: ({ req, res }) => ({ req, res })
+      context: ({ req, res }) => ({ req, res }),
+      cors: {
+        origin: true
+      }
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

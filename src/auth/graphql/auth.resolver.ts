@@ -1,15 +1,17 @@
 import { AuthService } from '../auth.service'
 import { LoginInfo } from './auth.model'
-import { Query, Args, Resolver, Context, Mutation } from '@nestjs/graphql'
+import { Query, Args, Resolver, Context, Mutation, ResolveField, Parent } from '@nestjs/graphql'
 import { User as UserEntity } from '../../user/entities/user.entity'
 import { UnauthorizedException, UseGuards } from '@nestjs/common'
 import { GqlUser } from '../user.decorator'
 import { JwtGqlGuard } from '../jwt-auth.guard'
+import { UserService } from '../../user/user.service'
 
 @Resolver(of => LoginInfo)
 export class AuthResolver {
     constructor(
-        private authService: AuthService
+        private authService: AuthService,
+        private userService: UserService
     ) { }
 
     @Query(returns => LoginInfo)
@@ -31,6 +33,12 @@ export class AuthResolver {
         })
 
         return data
+    }
+
+    @ResolveField()
+    async user(@Parent() login: LoginInfo) {
+        const { id } = login
+        return this.userService.findById(id)
     }
 
     @Query(returns => LoginInfo)

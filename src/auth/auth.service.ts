@@ -33,6 +33,7 @@ export class AuthService {
 
         exp.setMinutes(exp.getMinutes() + 15)
         return {
+            id: user.id,
             access_token: this.jwtService.sign(payload, {
                 expiresIn: '15m'
             }),
@@ -61,6 +62,7 @@ export class AuthService {
         await this.userService.saveToken(user.id, refresh_token, 'refresh')
 
         return {
+            id: user.id,
             access_token: this.jwtService.sign(payload, {
                 expiresIn: '15m'
             }),
