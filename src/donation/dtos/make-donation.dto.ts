@@ -6,6 +6,6 @@ export class MakeDonationDto {
     // to: string
     @Min(1500)
     amount: number
-    message: string
+    message?: string
     payment_method?: string
 }

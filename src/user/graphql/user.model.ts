@@ -13,8 +13,8 @@ export class User {
     username: string
     @Field(type => Date)
     createdAt: Date
-    @Field()
-    password: string
+    // @Field()
+    // password: string
     // @Field(type => [Token])
     // tokens: Token[]
 }
