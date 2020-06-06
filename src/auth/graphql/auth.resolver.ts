@@ -1,8 +1,10 @@
 import { AuthService } from '../auth.service'
 import { LoginInfo } from './auth.model'
-import { Query, Args, Resolver, Context } from '@nestjs/graphql'
+import { Query, Args, Resolver, Context, Mutation } from '@nestjs/graphql'
 import { User as UserEntity } from '../../user/entities/user.entity'
-import { UnauthorizedException } from '@nestjs/common'
+import { UnauthorizedException, UseGuards } from '@nestjs/common'
+import { GqlUser } from '../user.decorator'
+import { JwtGqlGuard } from '../jwt-auth.guard'
 
 @Resolver(of => LoginInfo)
 export class AuthResolver {
@@ -40,5 +42,18 @@ export class AuthResolver {
         } catch (e) {
             throw new UnauthorizedException('invalid token occured')
         }
+    }
+
+    @Mutation(returns => Boolean)
+    @UseGuards(JwtGqlGuard)
+    async logout(@Context() ctx: any, @GqlUser() user: any) {
+        const token = ctx.req.cookies.refresh_token
+        // Delete Token
+        await this.authService.logout(user.id, token)
+        ctx.res.cookie('refresh_token', '', {
+            httpOnly: true,
+        })
+
+        return true
     }
 }
