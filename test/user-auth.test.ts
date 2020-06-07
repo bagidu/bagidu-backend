@@ -188,4 +188,132 @@ describe('AppController (e2e)', () => {
     })
   })
 
+  describe('GraphQL', () => {
+
+    it('login query', async () => {
+      const query = `query {
+        login(username:"test",password:"secret") {
+          access_token
+          refresh_token
+          user {
+            username
+          }
+        }
+      }
+      `
+      const user = {
+        username: 'test',
+        password: 'secret',
+        email: 'email@local.dev'
+      } as CreateUserDto
+
+      const u: User = await userService.create(user)
+      return request(app.getHttpServer())
+        .post('/graphql')
+        .type('form')
+        .set('Accept', 'application/json')
+        .send({ query })
+        .expect(200)
+        .then(res => {
+          const data = res.body.data
+          expect(data.login.access_token).toBeTruthy()
+          expect(data.login.user.username).toEqual(u.username)
+        })
+    })
+
+    it('token query', async () => {
+
+      const query = `query {
+        token {
+          access_token
+          user {
+            username
+          }
+        }
+      }
+      `
+      const user = {
+        username: 'test',
+        password: 'secret',
+        email: 'email@local.dev'
+      } as CreateUserDto
+
+      const u: User = await userService.create(user)
+      const auth = await authService.login(u)
+
+      return request(app.getHttpServer())
+        .post('/graphql')
+        .type('form')
+        .set('Accept', 'application/json')
+        .set('Cookie', [`refresh_token=${auth.refresh_token}`])
+        .send({ query })
+        .expect(200)
+        .then(res => {
+          const data = res.body.data
+          expect(data.token.access_token).toBeTruthy()
+          expect(data.token.user.username).toEqual(u.username)
+        })
+    })
+
+    it('logout mutation', async () => {
+
+      const query = `mutation {
+        logout 
+      }
+      `
+      const user = {
+        username: 'test',
+        password: 'secret',
+        email: 'email@local.dev'
+      } as CreateUserDto
+
+      const u: User = await userService.create(user)
+      const auth = await authService.login(u)
+
+      return request(app.getHttpServer())
+        .post('/graphql')
+        .type('form')
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${auth.access_token}`)
+        .set('Cookie', [`refresh_token=${auth.refresh_token}`])
+        .send({ query })
+        .expect(200)
+        .then(res => {
+          const data = res.body.data
+          expect(data.logout).toBeTruthy()
+        })
+    })
+
+    it('token query error', async () => {
+
+      const query = `query {
+        token {
+          access_token
+        }
+      }
+      `
+      const user = {
+        username: 'test',
+        password: 'secret',
+        email: 'email@local.dev'
+      } as CreateUserDto
+
+      const u: User = await userService.create(user)
+      const auth = await authService.login(u)
+
+      return request(app.getHttpServer())
+        .post('/graphql')
+        .type('form')
+        .set('Accept', 'application/json')
+        .send({ query })
+        .expect(200)
+        .then(res => {
+          const data = res.body.data
+          expect(data).toBeFalsy()
+        })
+    })
+
+
+  })
+
 })
