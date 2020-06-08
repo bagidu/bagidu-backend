@@ -11,9 +11,9 @@ export class AppService {
   }
 
   // @Cron('0 */10 * * * *')
-  // ping(): void {
-  //   this.http.get('https://api.bagidu.id/?ping_schedule').pipe(
-  //     map(res => res.status)
-  //   ).subscribe(status => console.log(`ping status: ${status}`))
-  // }
+  ping(): void {
+    this.http.get('https://api.bagidu.id/?ping_schedule').pipe(
+      map(res => res.status)
+    ).subscribe(status => console.log(`ping status: ${status}`))
+  }
 }
