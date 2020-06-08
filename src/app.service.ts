@@ -10,10 +10,10 @@ export class AppService {
     return 'Diam itu emas 🤪'
   }
 
-  @Cron('0 */10 * * * *')
-  ping(): void {
-    this.http.get('https://api.bagidu.id/?ping_schedule').pipe(
-      map(res => res.status)
-    ).subscribe(status => console.log(`ping status: ${status}`))
-  }
+  // @Cron('0 */10 * * * *')
+  // ping(): void {
+  //   this.http.get('https://api.bagidu.id/?ping_schedule').pipe(
+  //     map(res => res.status)
+  //   ).subscribe(status => console.log(`ping status: ${status}`))
+  // }
 }
