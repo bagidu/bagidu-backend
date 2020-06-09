@@ -1,9 +1,11 @@
-import { Resolver, Args, Query, ResolveField, Parent } from '@nestjs/graphql'
+import { Resolver, Args, Query, ResolveField, Parent, Mutation } from '@nestjs/graphql'
 import { User } from './user.model'
 import { UserService } from '../user.service'
-import { UseGuards, Req, UseFilters, NotFoundException } from '@nestjs/common'
+import { UseGuards, Req, UseFilters, NotFoundException, BadRequestException } from '@nestjs/common'
 import { JwtGqlGuard } from '../../auth/jwt-auth.guard'
 import { GqlUser } from '../../auth/user.decorator'
+import { RegisterInput } from './register.input'
+import { HttpExceptionFilter } from '../../common/gqlexception.filter'
 
 @Resolver(of => User)
 export class UserResolver {
@@ -28,6 +30,21 @@ export class UserResolver {
             throw new NotFoundException('User Not Found')
         }
         return result
+    }
+
+    @Mutation(returns => User)
+    async register(@Args('data') data: RegisterInput) {
+        const emailExists = await this.userService.findBy({ email: data.email })
+        if (emailExists) {
+            throw new BadRequestException('Email already in use')
+        }
+
+        const usernameExists = await this.userService.findBy({ username: data.username })
+        if (usernameExists) {
+            throw new BadRequestException('Username already in use')
+        }
+
+        return this.userService.create(data)
     }
 
 

@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common'
+import { INestApplication, ValidationPipe } from '@nestjs/common'
 import * as request from 'supertest'
 import { UserService } from '../src/user/user.service'
 import { CreateUserDto } from '../src/user/dtos/create-user.dto'
@@ -25,6 +25,7 @@ describe('AppController (e2e)', () => {
     authService = moduleFixture.get(AuthService)
 
     app.use(CookieParser())
+    app.useGlobalPipes(new ValidationPipe())
 
     await app.init()
   })
@@ -313,7 +314,66 @@ describe('AppController (e2e)', () => {
         })
     })
 
+    it('register success', () => {
+      const query = `mutation {
+        register(data:{
+          name:"Sucipto",
+          username:"sucipto",
+          password:"secret",
+          email:"email@local.dev"
+        }){
+          id
+          name
+          username
+          email
+        }
+      }
+      `
+      return request(app.getHttpServer())
+        .post('/graphql')
+        .type('form')
+        .set('Accept', 'application/json')
+        .send({ query })
+        .expect(200)
+        .then(res => {
+          const { body } = res
+          expect(body.error).toBeFalsy()
+          expect(body.data.register).toBeTruthy()
+          expect(body.data.register.username).toEqual('sucipto')
+        })
+    })
 
+    it('register validation fail', () => {
+      const query = `mutation {
+        register(data:{
+          name:"Sucipto",
+          username:"sucipto",
+          password:"secret",
+          email:"email@invalidemail"
+        }){
+          id
+          name
+          username
+          email
+        }
+      }
+      `
+      return request(app.getHttpServer())
+        .post('/graphql')
+        .type('form')
+        .set('Accept', 'application/json')
+        .send({ query })
+        .expect(200)
+        .then(res => {
+          const { body } = res
+          expect(body.errors).toBeTruthy()
+          expect(body.data).toBeFalsy()
+
+          const error = body.errors[0]
+          expect(error).toBeTruthy()
+          expect(error.extensions.exception.status === 400)
+        })
+    })
   })
 
 })
