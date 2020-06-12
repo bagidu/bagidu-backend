@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { UserService } from '../user/user.service'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { User } from '../user/entities/user.entity'
 import { JwtService } from '@nestjs/jwt'
 
@@ -14,7 +14,7 @@ export class AuthService {
     async validateUser(username: string, pass: string): Promise<User | null> {
         const user = await this.userService.findBy({ $or: [{ username }, { email: username }] })
         if (user) {
-            const correct = await bcrypt.compare(pass, user.password)
+            const correct = bcrypt.compareSync(pass, user.password)
             if (correct) {
                 return user
             }

@@ -1,7 +1,8 @@
-# Builder
+# Build Image
 FROM node:12-alpine AS build
 
-RUN apk add --no-cache --update --virtual builds-deps build-base python
+# Disable mongo memory server download binary
+ENV MONGOMS_DISABLE_POSTINSTALL=1
 
 WORKDIR /src
 
@@ -11,8 +12,8 @@ RUN npm install
 COPY . /src
 RUN npm run build
 
+# Runner Image
 FROM node:12-alpine
-RUN apk add --no-cache --update --virtual builds-deps build-base python
 
 WORKDIR /app
 
