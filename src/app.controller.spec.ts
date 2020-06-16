@@ -27,20 +27,20 @@ describe('AppController', () => {
       expect(appController.getHello()).toBe('Diam itu emas 🤪')
     })
 
-    it('cron: ping called', () => {
-      jest.spyOn(http, 'get').mockImplementation(() => {
+    // it('cron: ping called', () => {
+    //   jest.spyOn(http, 'get').mockImplementation(() => {
 
-        const resp = {
-        } as AxiosResponse
-        resp.data = {
-          'external_id': 'xxx'
-        }
-        return of(resp)
-      })
+    //     const resp = {
+    //     } as AxiosResponse
+    //     resp.data = {
+    //       'external_id': 'xxx'
+    //     }
+    //     return of(resp)
+    //   })
 
-      service.ping()
+    //   service.ping()
 
-      expect(http.get).toBeCalledTimes(1)
-    })
+    //   expect(http.get).toBeCalledTimes(1)
+    // })
   })
 })
