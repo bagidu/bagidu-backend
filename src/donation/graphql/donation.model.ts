@@ -26,6 +26,8 @@ export class Donation {
     payment_method: string
     @Field(type => Date)
     createdAt: Date
+    @Field()
+    status: string
 }
 
 @ObjectType()
